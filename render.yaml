@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: cinesupernova-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter          # ⚠️ Persistent Disk ใช้ได้เฉพาะ plan ที่ไม่ใช่ Free
+    healthCheckPath: /api/health
+    disk:
+      name: cinesupernova-data
+      mountPath: /app/Backend/data   # ต้องตรงกับ path ที่ auth.js / database.js ใช้เก็บ .sqlite
+      sizeGB: 1
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: JWT_SECRET
+        sync: false        # ไปตั้งค่าจริงเองใน Render Dashboard > Environment

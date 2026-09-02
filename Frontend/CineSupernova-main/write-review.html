@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เขียนรีวิว — CineSupernova</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="glow-field"></div>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="brand"><span class="spark">🎬</span> CineSupernova</a>
+    <div class="nav-links">
+      <a href="index.html">หน้าแรก</a>
+      <a href="search.html">ค้นหา</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="profile.html" class="nav-avatar">JT</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap" style="max-width:720px;">
+    <div class="eyebrow">✍️ รีวิว · ได้ +50 XP เมื่อส่งสำเร็จ</div>
+    <h1 style="margin-bottom:28px;">เขียนรีวิว: สัญญาณจากดาวที่ไม่มีใครเห็น</h1>
+
+    <div class="card-panel">
+      <div class="field">
+        <label>ให้กี่ป๊อปคอร์น?</label>
+        <div class="popcorn-row" id="popcornRow">
+          <span data-val="1">🍿</span><span data-val="2">🍿</span><span data-val="3">🍿</span><span data-val="4">🍿</span><span data-val="5">🍿</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>เทมเพลตรีวิว (ให้ AI ช่วยร่างให้)</label>
+        <select id="templateSelect">
+          <option value="">— เลือกสไตล์รีวิว —</option>
+          <option value="hype">ป้ายยาแรงๆ</option>
+          <option value="polite-roast">ด่ากราดแบบผู้ดี</option>
+          <option value="heartbroken">อกหักแทนตัวละคร</option>
+          <option value="confused">งงแต่ทึ่ง</option>
+        </select>
+      </div>
+
+      <button class="btn btn-ghost" id="aiGenerateBtn" type="button">✨ AI Generate ร่างรีวิวให้หน่อย</button>
+
+      <div class="field" style="margin-top:22px;">
+        <label>เนื้อหารีวิว</label>
+        <textarea id="reviewText" placeholder="เล่าให้ฟังหน่อยว่าหนังเรื่องนี้ทำอะไรกับใจคุณ..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>มีสปอยล์ในรีวิวนี้ไหม?</label>
+        <select id="spoilerSelect">
+          <option value="no">ไม่มีสปอยล์</option>
+          <option value="yes">มีสปอยล์ — เบลอให้อัตโนมัติ</option>
+        </select>
+      </div>
+
+      <button class="btn btn-primary btn-block" id="submitReviewBtn">ส่งรีวิว</button>
+    </div>
+  </div>
+</main>
+
+<footer>CineSupernova — โปรเจกต์ตัวอย่างจาก User Journey · ข้อมูลทั้งหมดเป็น mock data</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cinesupernova-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./Backend/.env
+    volumes:
+      - sqlite-data:/app/Backend/data   # เก็บไฟล์ .sqlite ไว้นอก container ไม่หายตอน rebuild
+    restart: unless-stopped
+
+volumes:
+  sqlite-data:

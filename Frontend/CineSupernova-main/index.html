@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineSupernova — เจอหนังที่ใช่ ตรง Vibe คุณ</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="glow-field"></div>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="brand"><span class="spark">🎬</span> CineSupernova</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">หน้าแรก</a>
+      <a href="search.html">ค้นหา</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="profile.html" class="nav-avatar">JT</a>
+      <a href="#" id="authBtn" class="btn btn-primary btn-sm" style="margin-left: 6px;">เข้าสู่ระบบ</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <section class="hero hero-grid">
+      <div>
+        <div class="eyebrow">🍿 หาหนังให้ตรงใจ ไม่ต้องเดา</div>
+        <h1>วันนี้อารมณ์ไหน<br>เราหาหนังที่ใช่ให้</h1>
+        <p class="lede">แตะอารมณ์วันนี้ของคุณ แล้วปล่อยให้เราจับคู่หนังที่เข้ากับความรู้สึกตอนนี้ ไม่ใช่แค่แนวหนังที่เคยดู</p>
+      </div>
+      <div class="hero-showcase">
+        <div class="showcase-ticket">
+          <div class="showcase-poster poster-scifi">
+            <span class="icon-lg">🛸</span>
+          </div>
+          <div class="ticket-perf"></div>
+          <div class="showcase-info">
+            <h3>สัญญาณจากดาวที่ไม่มีใครเห็น</h3>
+            <div class="meta">SCI-FI · ดราม่า · 2026</div>
+          </div>
+        </div>
+        <div class="float-badge badge-top">🔥 กำลังมาแรง</div>
+        <div class="float-badge badge-bottom">⭐ 4.8 คะแนนเฉลี่ย</div>
+      </div>
+    </section>
+
+    <div class="filmstrip"></div>
+
+    <section class="mood-panel">
+      <div class="mood-title">วันนี้คุณรู้สึกยังไง?</div>
+      <div class="mood-grid" id="moodGrid">
+        <button class="mood-chip" data-mood="1"><span class="emoji">😢</span><span class="txt">หดหู่</span></button>
+        <button class="mood-chip" data-mood="2"><span class="emoji">🙁</span><span class="txt">เหนื่อยล้า</span></button>
+        <button class="mood-chip selected" data-mood="3"><span class="emoji">😐</span><span class="txt">เฉยๆ</span></button>
+        <button class="mood-chip" data-mood="4"><span class="emoji">🙂</span><span class="txt">อารมณ์ดี</span></button>
+        <button class="mood-chip" data-mood="5"><span class="emoji">🤩</span><span class="txt">พลังล้น</span></button>
+      </div>
+      <div class="mood-readout" id="moodReadout">เฉยๆ อยากดูอะไรก็ได้ ลองดูหนังที่เราเลือกให้เลย 👇</div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>ตรง Vibe คุณตอนนี้</h2>
+        <a href="search.html" class="btn btn-ghost btn-sm">ค้นหาแบบละเอียด →</a>
+      </div>
+      <div class="grid" id="moodMovies"></div>
+    </section>
+  </div>
+</main>
+
+<!-- Modal เข้าสู่ระบบ / สมัครสมาชิก -->
+<div id="authModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <button class="modal-close" id="closeModalBtn">&times;</button>
+    <div class="modal-tabs">
+      <button class="tab-btn active" id="tabLogin">เข้าสู่ระบบ</button>
+      <button class="tab-btn" id="tabRegister">สมัครสมาชิก</button>
+    </div>
+    
+    <!-- ฟอร์ม เข้าสู่ระบบ -->
+    <form id="loginForm" class="auth-form">
+      <div class="field">
+        <input type="text" id="loginUsername" placeholder="ชื่อผู้ใช้" required />
+      </div>
+      <div class="field">
+        <input type="password" id="loginPassword" placeholder="รหัสผ่าน" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+    </form>
+
+    <!-- ฟอร์ม สมัครสมาชิก -->
+    <form id="registerForm" class="auth-form hidden">
+      <div class="field">
+        <input type="text" id="regUsername" placeholder="ชื่อผู้ใช้" required />
+        <!-- จุดที่เพิ่มแท็กสำหรับแสดงสถานะการเช็ก Username -->
+        <small id="modalUsernameStatus" style="display: block; margin-top: 6px; font-size: 0.8rem;"></small>
+      </div>
+      <div class="field">
+        <input type="email" id="regEmail" placeholder="อีเมล" required />
+      </div>
+      <div class="field">
+        <input type="password" id="regPassword" placeholder="รหัสผ่าน" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">สมัครสมาชิก</button>
+    </form>
+    
+    <p id="authError" class="error-msg"></p>
+  </div>
+</div>
+
+<!-- Modal เปลี่ยนรหัสผ่าน -->
+<div id="changePasswordModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <button class="modal-close" id="closeChangePassBtn">&times;</button>
+    <h3 style="color: #ffc857; margin-top: 0; margin-bottom: 16px;">🔒 เปลี่ยนรหัสผ่าน</h3>
+
+    <form id="changePasswordForm" class="auth-form">
+      <div class="field">
+        <input type="password" id="oldPassword" placeholder="รหัสผ่านเดิม" required />
+      </div>
+      <div class="field">
+        <input type="password" id="newPassword" placeholder="รหัสผ่านใหม่" required />
+      </div>
+      <div class="field">
+        <input type="password" id="confirmPassword" placeholder="ยืนยันรหัสผ่านใหม่" required />
+      </div>
+      <p id="changePassError" class="error-msg"></p>
+      <button type="submit" class="btn btn-primary btn-block">ยืนยันการเปลี่ยนรหัสผ่าน</button>
+    </form>
+  </div>
+</div>
+
+<footer>CineSupernova — โปรเจกต์ตัวอย่างจาก User Journey · ข้อมูลทั้งหมดเป็น mock data</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

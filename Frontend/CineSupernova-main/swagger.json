@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CineSupernova API",
+    "version": "1.0.0",
+    "description": "เอกสารและทดสอบระบบ REST API สำหรับโปรเจกต์ CineSupernova"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Health Check",
+        "responses": { "200": { "description": "ระบบทำงานปกติ" } }
+      }
+    },
+    "/api/check-username/{name}": {
+      "get": {
+        "summary": "ตรวจสอบชื่อผู้ใช้ซ้ำ",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "สำเร็จ" } }
+      }
+    },
+    "/api/movies": {
+      "get": {
+        "summary": "ดึงรายการภาพยนตร์ทั้งหมด",
+        "responses": { "200": { "description": "สำเร็จ" } }
+      }
+    },
+    "/api/login": {
+      "post": {
+        "summary": "เข้าสู่ระบบ",
+        "responses": { "200": { "description": "สำเร็จ" } }
+      }
+    }
+  }
+}

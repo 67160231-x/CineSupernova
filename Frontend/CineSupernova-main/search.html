@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ค้นหาหนัง — CineSupernova</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="glow-field"></div>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="brand"><span class="spark">🎬</span> CineSupernova</a>
+    <div class="nav-links">
+      <a href="index.html">หน้าแรก</a>
+      <a href="search.html" class="active">ค้นหา</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="profile.html" class="nav-avatar">JT</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="eyebrow">🔍 ค้นแบบเจาะ Vibe</div>
+    <h1 style="margin-bottom:24px;">หาหนังที่ตรงใจคุณ</h1>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="พิมพ์ชื่อหนัง หรือความรู้สึกที่อยากได้...">
+      <button class="btn btn-primary" id="searchBtn">ค้นหา</button>
+    </div>
+
+    <div class="tag-filters" id="tagFilters">
+      <button class="tag-btn" data-tag="หักมุมจนหัวหมุน">😵‍💫 หักมุมจนหัวหมุน</button>
+      <button class="tag-btn" data-tag="ตับพัง 3 วัน">💔 ตับพัง 3 วัน</button>
+      <button class="tag-btn" data-tag="ดูจบแล้วอยากกอดใครสักคน">🤗 อยากกอดใครสักคน</button>
+      <button class="tag-btn" data-tag="ปิดไฟดูคนเดียวเท่านั้น">🌙 ปิดไฟดูคนเดียว</button>
+      <button class="tag-btn" data-tag="ฮาจนสำลักป๊อปคอร์น">😂 ฮาจนสำลักป๊อปคอร์น</button>
+      <button class="tag-btn" data-tag="วิทยาศาสตร์งงแต่เท่">🛸 งงแต่เท่</button>
+    </div>
+
+    <div class="section-head">
+      <h2 id="resultsTitle">หนังทั้งหมด</h2>
+      <span class="eyebrow" style="margin:0;" id="resultsCount"></span>
+    </div>
+
+    <div class="grid" id="resultsGrid"></div>
+
+    <div class="empty-state" id="emptyState">
+      <div class="glyph">🛸</div>
+      <h3>ไม่พบหนังในจักรวาลนี้ที่ตรง Vibe ของคุณ</h3>
+      <p>ลองลบแท็กบางอันออก หรือเปลี่ยนคำค้นหาดูนะ</p>
+      <button class="btn btn-ghost btn-sm" id="clearFiltersBtn">ล้างตัวกรองทั้งหมด</button>
+    </div>
+  </div>
+</main>
+
+<footer>CineSupernova — โปรเจกต์ตัวอย่างจาก User Journey · ข้อมูลทั้งหมดเป็น mock data</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

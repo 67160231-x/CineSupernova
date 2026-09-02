@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เข้าสู่ระบบ / สมัครสมาชิก - CineSupernova</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body.auth-page {
+      background: radial-gradient(circle at center, #2b1220 0%, #0d0c1d 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+      color: #f8f5ff;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 32px;
+      background: rgba(30, 26, 46, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+    .brand-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .brand-header h1 {
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 2rem;
+      color: #ffc857;
+      margin: 8px 0 4px;
+      letter-spacing: 1px;
+    }
+    .brand-header p {
+      color: #a09cb0;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px;
+      border-radius: 10px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: #a09cb0;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      background: #ff7a59;
+      color: #fff;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      color: #d1cde0;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      background: rgba(15, 13, 25, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+      border-color: #ff7a59;
+    }
+    .error-msg {
+      color: #ff4d4d;
+      font-size: 0.85rem;
+      text-align: center;
+      margin: 8px 0;
+      min-height: 20px;
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #ff7a59 0%, #e50914 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+    .btn-submit:hover {
+      opacity: 0.9;
+    }
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body class="auth-page">
+
+  <div class="auth-card">
+    <div class="brand-header">
+      <span style="font-size: 3rem;">🎬</span>
+      <h1>CINESUPERNOVA</h1>
+      <p>ยินดีต้อนรับสู่คอมมูนิตี้คนรักหนัง</p>
+    </div>
+
+    <!-- แท็บสลับ เข้าสู่ระบบ / สมัครสมาชิก -->
+    <div class="auth-tabs">
+      <button id="pageTabLogin" class="tab-btn active">เข้าสู่ระบบ</button>
+      <button id="pageTabRegister" class="tab-btn">สมัครสมาชิก</button>
+    </div>
+
+    <!-- ฟอร์ม เข้าสู่ระบบ -->
+    <form id="pageLoginForm">
+      <div class="form-group">
+        <label>ชื่อผู้ใช้ (Username)</label>
+        <input type="text" id="pageUsername" placeholder="กรอกชื่อผู้ใช้" required>
+      </div>
+      <div class="form-group">
+        <label>รหัสผ่าน (Password)</label>
+        <input type="password" id="pagePassword" placeholder="กรอกรหัสผ่าน" required>
+      </div>
+      <p id="pageLoginError" class="error-msg"></p>
+      <button type="submit" class="btn-submit">เข้าสู่ระบบ</button>
+    </form>
+
+    <!-- ฟอร์ม สมัครสมาชิก -->
+    <form id="pageRegisterForm" class="hidden">
+      <div class="form-group">
+        <label>ชื่อผู้ใช้ (Username)</label>
+        <input type="text" id="pageRegUsername" placeholder="ตั้งชื่อผู้ใช้" required>
+      </div>
+      <div class="form-group">
+        <label>อีเมล (Email)</label>
+        <input type="email" id="pageRegEmail" placeholder="example@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>รหัสผ่าน (Password)</label>
+        <input type="password" id="pageRegPassword" placeholder="ตั้งรหัสผ่าน" required>
+      </div>
+      <p id="pageRegError" class="error-msg"></p>
+      <button type="submit" class="btn-submit">สมัครสมาชิก</button>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

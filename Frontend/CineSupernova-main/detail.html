@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายละเอียดหนัง — CineSupernova</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="glow-field"></div>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="brand"><span class="spark">🎬</span> CineSupernova</a>
+    <div class="nav-links">
+      <a href="index.html">หน้าแรก</a>
+      <a href="search.html">ค้นหา</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="profile.html" class="nav-avatar">JT</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="detail-hero">
+      <div class="poster-lg poster-scifi" style="display:flex;align-items:center;justify-content:center;">
+        <span class="icon-lg" style="font-size:4.5rem;">🛸</span>
+      </div>
+      <div>
+        <div class="eyebrow">🛸 SCI-FI · ดราม่า · 2026</div>
+        <h1>สัญญาณจากดาวที่ไม่มีใครเห็น</h1>
+        <p style="max-width:520px;">นักบินอวกาศคนสุดท้ายต้องเลือกระหว่างกลับบ้านหรือรอสัญญาณที่อาจไม่มีจริง เรื่องราวว่าด้วยความเหงาในที่ที่ไกลที่สุดจากมนุษย์คนอื่น</p>
+
+        <div class="rating-row">
+          <div class="rating-chip"><div class="num">–</div><div class="lbl">คะแนนรวม</div></div>
+          <div class="rating-chip"><div class="num">–</div><div class="lbl">ปีที่ฉาย</div></div>
+          <div class="rating-chip"><div class="num">–</div><div class="lbl">ความยาว (นาที)</div></div>
+          <div class="rating-chip"><div class="num">–</div><div class="lbl">จำนวนโหวต</div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <button class="btn btn-primary" id="writeReviewBtn">✍️ เขียนรีวิว</button>
+          <button class="btn btn-ghost" id="addWatchlistBtn">＋ เพิ่มลง Watchlist</button>
+        </div>
+
+        <div class="stickers" style="margin-top:20px;">
+          <span class="sticker">😵‍💫 หักมุมจนหัวหมุน</span>
+          <span class="sticker">🌙 ปิดไฟดูคนเดียว</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="emotion-graph">
+      <h3>📈 กราฟอารมณ์ระหว่างเรื่อง</h3>
+      <svg viewBox="0 0 600 140" width="100%" height="140" preserveAspectRatio="none" role="img" aria-label="กราฟอารมณ์ของหนังตั้งแต่ต้นจนจบ">
+        <defs>
+          <linearGradient id="graphLine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ff7a59"/>
+            <stop offset="100%" stop-color="#ffc857"/>
+          </linearGradient>
+        </defs>
+        <polyline points="0,90 80,70 160,100 240,40 320,60 400,20 480,55 560,10 600,30"
+          fill="none" stroke="url(#graphLine)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div style="display:flex;justify-content:space-between;font-size:.76rem;color:var(--text-dim);font-weight:600;">
+        <span>เปิดเรื่อง</span><span>กลางเรื่อง</span><span>ไคลแมกซ์</span><span>จบ</span>
+      </div>
+    </div>
+
+    <section>
+      <div class="section-head"><h2>รีวิวจากนักวิจารณ์</h2></div>
+
+      <div class="review-block">
+        <div class="author">🧑‍🚀 น้องเจย์ · Lv.12 · 🍿🍿🍿🍿🍿</div>
+        <p>งานภาพและซาวด์ดีไซน์ทำให้ความเงียบของอวกาศรู้สึกหนักอึ้งจริง เป็นหนังที่ต้องดูในโรงหรือปิดไฟดูคนเดียว</p>
+
+        <div class="spoiler-wrap">
+          <p class="spoiler-blur" id="spoilerText">
+            ตอนจบเฉลยว่าสัญญาณที่ได้ยินมาตลอดทั้งเรื่องคือเสียงบันทึกของตัวเองจากอดีต ไม่มีใครส่งมาช่วยเลยจริงๆ
+          </p>
+          <div class="spoiler-overlay" id="spoilerOverlay">
+            <button class="btn btn-ghost btn-sm" id="spoilerBtn">🙈 คลิกยืนยัน 3 ครั้งเพื่อดูสปอยล์</button>
+            <span class="count" id="spoilerCount">คลิกแล้ว 0 / 3</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>CineSupernova — โปรเจกต์ตัวอย่างจาก User Journey · ข้อมูลทั้งหมดเป็น mock data</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watchlist — CineSupernova</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="glow-field"></div>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="brand"><span class="spark">🎬</span> CineSupernova</a>
+    <div class="nav-links">
+      <a href="index.html">หน้าแรก</a>
+      <a href="search.html">ค้นหา</a>
+      <a href="watchlist.html" class="active">Watchlist</a>
+      <a href="profile.html" class="nav-avatar">JT</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap">
+    <div class="eyebrow">🔖 เก็บไว้ดูทีหลัง</div>
+    <h1 style="margin-bottom:28px;">Watchlist ของคุณ</h1>
+
+    <div id="watchlistItems">
+      <div class="watch-row">
+        <div class="poster-sm poster-scifi" style="display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🛸</div>
+        <div class="grow">
+          <h4>สัญญาณจากดาวที่ไม่มีใครเห็น</h4>
+          <div class="meta">🛸 SCI-FI · ดราม่า · 2026</div>
+        </div>
+        <button class="btn btn-ghost btn-sm story-btn" data-title="สัญญาณจากดาวที่ไม่มีใครเห็น" data-tag="ปิดไฟดูคนเดียวเท่านั้น">📸 Generate Story Card</button>
+      </div>
+      <div class="watch-row">
+        <div class="poster-sm poster-drama" style="display:flex;align-items:center;justify-content:center;font-size:1.6rem;">🎭</div>
+        <div class="grow">
+          <h4>ตับพัง 3 วัน 3 คืน</h4>
+          <div class="meta">💔 ดราม่า · โรแมนติก · 2025</div>
+        </div>
+        <button class="btn btn-ghost btn-sm story-btn" data-title="ตับพัง 3 วัน 3 คืน" data-tag="ตับพัง 3 วัน">📸 Generate Story Card</button>
+      </div>
+      <div class="watch-row">
+        <div class="poster-sm poster-comedy" style="display:flex;align-items:center;justify-content:center;font-size:1.6rem;">😂</div>
+        <div class="grow">
+          <h4>หัวเราะทั้งน้ำตา</h4>
+          <div class="meta">😂 คอมเมดี้ · 2026</div>
+        </div>
+        <button class="btn btn-ghost btn-sm story-btn" data-title="หัวเราะทั้งน้ำตา" data-tag="ฮาจนสำลักป๊อปคอร์น">📸 Generate Story Card</button>
+      </div>
+    </div>
+
+    <canvas id="storyCanvas" width="540" height="960" style="display:none;"></canvas>
+  </div>
+</main>
+
+<footer>CineSupernova — โปรเจกต์ตัวอย่างจาก User Journey · ข้อมูลทั้งหมดเป็น mock data</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

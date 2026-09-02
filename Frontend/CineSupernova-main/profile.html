@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โปรไฟล์ของคุณ — CineSupernova</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="glow-field"></div>
+
+<nav class="navbar">
+  <div class="wrap">
+    <a href="index.html" class="brand"><span class="spark">🎬</span> CineSupernova</a>
+    <div class="nav-links">
+      <a href="index.html">หน้าแรก</a>
+      <a href="search.html">ค้นหา</a>
+      <a href="watchlist.html">Watchlist</a>
+      <a href="profile.html" class="nav-avatar active">JT</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div class="wrap" style="max-width: 800px; margin: 0 auto; padding: 2rem 1rem;">
+    <!-- ข้อมูลผู้ใช้งาน -->
+    <section class="profile-header" style="text-align: center; margin-bottom: 2.5rem;">
+      <div class="avatar-lg" style="width: 80px; height: 80px; border-radius: 50%; background: #ffc857; color: #100e19; font-size: 2rem; font-weight: bold; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto;">
+        👤
+      </div>
+      <h1 id="profileName" style="margin: 0 0 0.5rem 0;">กำลังโหลด...</h1>
+      <div id="profileLevel" style="color: #ffc857; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.25rem;"></div>
+      <div id="profileXp" style="color: #a09cb0; font-size: 0.9rem;"></div>
+    </section>
+
+    <!-- เหรียญรางวัล -->
+    <section style="margin-bottom: 3rem;">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #f8f5ff;">🏅 เหรียญรางวัลของคุณ</h2>
+      <div id="badgeGrid" class="grid" style="grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem;"></div>
+    </section>
+
+    <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 2rem 0;">
+
+    <!-- ฟอร์มเปลี่ยนรหัสผ่าน -->
+    <section class="auth-card" style="background: rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.08);">
+      <h2 style="font-size: 1.3rem; color: #ffc857; margin-top: 0; margin-bottom: 1.2rem;">🔒 เปลี่ยนรหัสผ่าน</h2>
+
+      <form id="changePasswordForm" class="auth-form">
+        <div class="field" style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.4rem; color: #a09cb0; font-size: 0.9rem;">รหัสผ่านเดิม</label>
+          <input type="password" id="oldPassword" placeholder="กรอกรหัสผ่านเดิม" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #332f48; background: #161224; color: #fff;" />
+        </div>
+        <div class="field" style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.4rem; color: #a09cb0; font-size: 0.9rem;">รหัสผ่านใหม่</label>
+          <input type="password" id="newPassword" placeholder="ตั้งรหัสผ่านใหม่" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #332f48; background: #161224; color: #fff;" />
+        </div>
+        <div class="field" style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.4rem; color: #a09cb0; font-size: 0.9rem;">ยืนยันรหัสผ่านใหม่</label>
+          <input type="password" id="confirmPassword" placeholder="กรอกรหัสผ่านใหม่อีกครั้ง" required style="width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid #332f48; background: #161224; color: #fff;" />
+        </div>
+        
+        <p id="changePassError" class="error-msg" style="color: #ff7a59; font-size: 0.85rem; margin-bottom: 1rem;"></p>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-weight: bold; cursor: pointer;">บันทึกรหัสผ่านใหม่</button>
+      </form>
+    </section>
+  </div>
+</main>
+
+<footer>CineSupernova — โปรเจกต์ตัวอย่างจาก User Journey · ข้อมูลทั้งหมดเป็น mock data</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
