@@ -9,7 +9,11 @@
     "/api/health": {
       "get": {
         "summary": "Health Check",
-        "responses": { "200": { "description": "ระบบทำงานปกติ" } }
+        "responses": {
+          "200": {
+            "description": "ระบบทำงานปกติ"
+          }
+        }
       }
     },
     "/api/check-username/{name}": {
@@ -20,22 +24,200 @@
             "name": "name",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "responses": { "200": { "description": "สำเร็จ" } }
+        "responses": {
+          "200": {
+            "description": "สำเร็จ"
+          }
+        }
       }
     },
     "/api/movies": {
       "get": {
         "summary": "ดึงรายการภาพยนตร์ทั้งหมด",
-        "responses": { "200": { "description": "สำเร็จ" } }
+        "responses": {
+          "200": {
+            "description": "สำเร็จ"
+          }
+        }
       }
     },
     "/api/login": {
       "post": {
         "summary": "เข้าสู่ระบบ",
-        "responses": { "200": { "description": "สำเร็จ" } }
+        "responses": {
+          "200": {
+            "description": "สำเร็จ"
+          }
+        }
+      }
+    },
+    "/api/recommendations": {
+      "get": {
+        "summary": "หนังแนะนำเฉพาะผู้ใช้ (เรียนรู้จากการเปิดดู/Watchlist/รีวิว/ไม่สนใจ)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 24,
+              "default": 12
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "personalized=false หมายถึงผู้ใช้ใหม่ ยังไม่มีข้อมูลรสนิยม (โชว์หนังคะแนนสูงทั่วไป) แต่ละเรื่องมี reason/reasonType บอกเหตุผลที่แนะนำ"
+          },
+          "401": {
+            "description": "ยังไม่ล็อกอิน"
+          }
+        }
+      }
+    },
+    "/api/recommendations/dismiss": {
+      "post": {
+        "summary": "กด \"ไม่สนใจ\" หนังที่แนะนำ (จะไม่ถูกแนะนำอีก)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "movieId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "movieId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "สำเร็จ"
+          },
+          "404": {
+            "description": "ไม่พบหนัง"
+          },
+          "503": {
+            "description": "ยังไม่ได้รัน migration_recommendations.sql"
+          }
+        }
+      }
+    },
+    "/api/taste-profile": {
+      "get": {
+        "summary": "สรุปรสนิยมหนังของผู้ใช้ (แนว/ผู้กำกับ/นักแสดง/ยุคที่ชอบ)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "สำเร็จ"
+          },
+          "401": {
+            "description": "ยังไม่ล็อกอิน"
+          }
+        }
+      }
+    },
+    "/api/views": {
+      "post": {
+        "summary": "บันทึกว่าผู้ใช้เปิดดูหนังเรื่องนี้ (ใช้เรียนรู้รสนิยม)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "movieId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "movieId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "สำเร็จ"
+          },
+          "404": {
+            "description": "ไม่พบหนัง"
+          }
+        }
+      }
+    },
+    "/api/movies/{id}/similar": {
+      "get": {
+        "summary": "หนังที่คล้ายกับเรื่องนี้ (ไม่ต้องล็อกอิน)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 4,
+              "maximum": 12
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "สำเร็จ"
+          },
+          "404": {
+            "description": "ไม่พบหนัง"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

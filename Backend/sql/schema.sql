@@ -72,6 +72,25 @@ create table if not exists watchlist_items (
   primary key (user_id, movie_id)
 );
 
+-- พฤติกรรมการดูหนัง สำหรับระบบแนะนำหนังเฉพาะบุคคล (ดู migration_recommendations.sql)
+create table if not exists movie_views (
+  id bigserial primary key,
+  user_id bigint not null references users(id) on delete cascade,
+  movie_id bigint not null references movies(id) on delete cascade,
+  viewed_at timestamptz not null default now()
+);
+create index if not exists idx_movie_views_user on movie_views(user_id, viewed_at desc);
+
+create table if not exists movie_dismissals (
+  user_id bigint not null references users(id) on delete cascade,
+  movie_id bigint not null references movies(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (user_id, movie_id)
+);
+
+create index if not exists idx_movies_director on movies(director);
+create index if not exists idx_movies_star on movies(star);
+
 -- ============================================================================
 -- Row Level Security
 -- Backend ใช้ service_role key ซึ่ง "bypass RLS โดยอัตโนมัติ" อยู่แล้ว
@@ -82,6 +101,8 @@ alter table users enable row level security;
 alter table sessions enable row level security;
 alter table reviews enable row level security;
 alter table watchlist_items enable row level security;
+alter table movie_views enable row level security;
+alter table movie_dismissals enable row level security;
 
 drop policy if exists "public read movies" on movies;
 create policy "public read movies" on movies for select using (true);

@@ -7,6 +7,8 @@ const { URL } = require('url');
 const { initDb, addReview, getReviews, getWatchlist, addToWatchlist, removeFromWatchlist } = require('./database');
 const movieService = require('./movies');
 const auth = require('./auth');
+const recService = require('./recommendation-service');
+const { recordView, addDismissal } = require('./database');
 
 const frontendDir = path.resolve(__dirname, '../Frontend/CineSupernova-main');
 
@@ -231,6 +233,71 @@ function createServer() {
         }
         return;
       }
+    }
+
+    // PERSONALIZED RECOMMENDATIONS
+    // หนังแนะนำเฉพาะคน (ต้องล็อกอิน) — เรียนรู้จากการเปิดดู / Watchlist / รีวิว / กด "ไม่สนใจ"
+    if (req.method === 'GET' && pathname === '/api/recommendations') {
+      try {
+        const { userId } = await requireAuth(req);
+        const limit = Math.min(24, Math.max(1, parseInt(reqUrl.searchParams.get('limit')) || 12));
+        const result = await recService.getRecommendations(userId, { limit });
+        sendJSON(res, 200, result);
+      } catch (error) {
+        sendJSON(res, error.status || 500, { error: error.message || 'เกิดข้อผิดพลาด' });
+      }
+      return;
+    }
+
+    // สรุปรสนิยมของผู้ใช้ (แนว/ผู้กำกับ/นักแสดงที่ชอบ) ไว้โชว์หน้า Profile
+    if (req.method === 'GET' && pathname === '/api/taste-profile') {
+      try {
+        const { userId } = await requireAuth(req);
+        const result = await recService.getTasteSummary(userId);
+        sendJSON(res, 200, result);
+      } catch (error) {
+        sendJSON(res, error.status || 500, { error: error.message || 'เกิดข้อผิดพลาด' });
+      }
+      return;
+    }
+
+    // บันทึกว่าผู้ใช้เปิดดูหนังเรื่องนี้ (เป็นสัญญาณรสนิยมแบบเบา) — ล้มเหลวเงียบๆ ได้ ไม่กระทบหน้าเว็บ
+    if (req.method === 'POST' && pathname === '/api/views') {
+      try {
+        const { userId } = await requireAuth(req);
+        const body = await parseBody(req);
+        await recordView(userId, body.movieId);
+        sendJSON(res, 201, { message: 'บันทึกแล้ว' });
+      } catch (error) {
+        sendJSON(res, error.status || 500, { error: error.message || 'เกิดข้อผิดพลาด' });
+      }
+      return;
+    }
+
+    // กด "ไม่สนใจ" หนังที่แนะนำ — เรื่องนี้จะไม่ถูกแนะนำอีก และลดน้ำหนักแนว/ผู้กำกับที่คล้ายกัน
+    if (req.method === 'POST' && pathname === '/api/recommendations/dismiss') {
+      try {
+        const { userId } = await requireAuth(req);
+        const body = await parseBody(req);
+        await addDismissal(userId, body.movieId);
+        sendJSON(res, 201, { message: 'รับทราบ จะไม่แนะนำเรื่องนี้อีก' });
+      } catch (error) {
+        sendJSON(res, error.status || 500, { error: error.message || 'เกิดข้อผิดพลาด' });
+      }
+      return;
+    }
+
+    // หนังที่คล้ายกับหนังเรื่องนี้ (ไม่ต้องล็อกอิน) — ต้องอยู่ก่อน route /api/movies/:id
+    const similarMatch = pathname.match(/^\/api\/movies\/([^/]+)\/similar$/);
+    if (req.method === 'GET' && similarMatch) {
+      try {
+        const limit = Math.min(12, Math.max(1, parseInt(reqUrl.searchParams.get('limit')) || 4));
+        const similar = await recService.getSimilar(similarMatch[1], { limit });
+        sendJSON(res, 200, similar);
+      } catch (error) {
+        sendJSON(res, error.status || 500, { error: error.message || 'Database error' });
+      }
+      return;
     }
 
     // MOVIES / REVIEWS / WATCHLIST / PROFILE

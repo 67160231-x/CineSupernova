@@ -368,6 +368,13 @@ window.handleRegister = async function (username, email, password) {
   }
 };
 
+// กัน HTML แทรกจากข้อมูลที่มาจากฐานข้อมูล/ผู้ใช้ ก่อนนำไปใส่ใน innerHTML
+function escapeHTML(value) {
+  return String(value === null || value === undefined ? '' : value).replace(/[&<>"']/g, (c) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
 function genreArt(genre) {
   const found = GENRE_ART.find((g) => (genre || '').includes(g.match));
   return found || { cls: 'poster-drama', icon: '🎬' };
@@ -387,11 +394,144 @@ function movieCardHTML(m) {
       </div>
       <div class="ticket-perf"></div>
       <div class="info">
-        <h3>${m.title}</h3>
-        <div class="meta">${m.genre} · ${m.year}</div>
-        <div class="stickers">${tagsList.map((t) => `<span class="sticker">${t}</span>`).join('')}</div>
+        <h3>${escapeHTML(m.title)}</h3>
+        <div class="meta">${escapeHTML(m.genre)} · ${escapeHTML(m.year)}</div>
+        <div class="stickers">${tagsList.map((t) => `<span class="sticker">${escapeHTML(t)}</span>`).join('')}</div>
       </div>
     </a>`;
+}
+
+// ===========================================================================
+// ระบบแนะนำหนังเฉพาะบุคคล
+// - หน้าแรก: "เลือกให้คุณโดยเฉพาะ" (เรียนรู้จากหนังที่เปิดดู / Watchlist / รีวิว)
+// - หน้า detail: บันทึกการเปิดดู + "หนังที่คล้ายกัน"
+// - หน้า profile: สรุปรสนิยม (แนวที่ชอบ ผู้กำกับที่ชอบ)
+// ===========================================================================
+function recoItemHTML(m) {
+  return `
+    <div class="reco-item" data-movie-id="${Number(m.id)}">
+      ${movieCardHTML(m)}
+      <div class="reco-meta">
+        <span class="reco-reason reason-${escapeHTML(m.reasonType || 'popular')}">${escapeHTML(m.reason || '')}</span>
+        <button type="button" class="reco-dismiss" data-movie-id="${Number(m.id)}" aria-label="ไม่สนใจเรื่อง ${escapeHTML(m.title)}">ไม่สนใจ ✕</button>
+      </div>
+    </div>`;
+}
+
+async function initRecommendations() {
+  const grid = document.getElementById('forYouGrid');
+  if (!grid) return;
+  const basisEl = document.getElementById('forYouBasis');
+  const noteEl = document.getElementById('forYouNote');
+  const LIMIT = 8;
+
+  async function load() {
+    try {
+      const data = await fetchJson(`/api/recommendations?limit=${LIMIT}`);
+      if (!data.items.length) {
+        grid.innerHTML = '<p style="opacity:.6;">ตอนนี้ยังไม่มีหนังให้แนะนำเพิ่ม ลองเปิดดูหนังเรื่องอื่นเพิ่มเติมนะ</p>';
+        return;
+      }
+      grid.innerHTML = data.items.map(recoItemHTML).join('');
+      if (data.personalized) {
+        const genres = (data.basedOn && data.basedOn.genres || []).slice(0, 2);
+        if (basisEl) basisEl.textContent = genres.length ? `จากแนวที่คุณชอบ: ${genres.join(' · ')}` : '';
+        if (noteEl) noteEl.textContent = 'เรียนรู้จากหนังที่คุณเปิดดู เก็บไว้ และรีวิว — เรื่องไหนไม่ถูกใจ กด "ไม่สนใจ" ได้เลย';
+      } else {
+        if (basisEl) basisEl.textContent = '';
+        if (noteEl) noteEl.textContent = 'ยังไม่รู้จักรสนิยมคุณเลย ลองเปิดดูหนัง เพิ่ม Watchlist หรือเขียนรีวิว แล้วรายการนี้จะเริ่มเป็นของคุณ — ตอนนี้เป็นหนังคะแนนสูงที่คนดูเยอะ';
+      }
+    } catch (error) {
+      console.error(error);
+      grid.innerHTML = '<p style="opacity:.6;">โหลดหนังแนะนำไม่สำเร็จ ลองใหม่อีกครั้ง</p>';
+    }
+  }
+
+  grid.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.reco-dismiss');
+    if (!btn) return;
+    btn.disabled = true;
+    const item = btn.closest('.reco-item');
+    try {
+      await fetchJson('/api/recommendations/dismiss', {
+        method: 'POST',
+        body: JSON.stringify({ movieId: Number(btn.dataset.movieId) })
+      });
+      item.classList.add('removing');
+      setTimeout(() => {
+        item.remove();
+        // เหลือน้อยเกินไปก็ดึงชุดใหม่ (เรื่องที่เพิ่งกดไม่สนใจจะไม่กลับมา)
+        if (grid.querySelectorAll('.reco-item').length < LIMIT / 2) load();
+      }, 250);
+    } catch (error) {
+      console.error(error);
+      btn.disabled = false;
+      btn.textContent = 'ลองอีกครั้ง';
+    }
+  });
+
+  await load();
+}
+
+async function initTasteProfile() {
+  const el = document.getElementById('tasteProfile');
+  if (!el) return;
+  try {
+    const t = await fetchJson('/api/taste-profile');
+    if (!t.genres.length) {
+      el.innerHTML = '<p class="taste-empty">ยังวิเคราะห์รสนิยมไม่ได้ ลองเปิดดูหนัง เพิ่ม Watchlist หรือเขียนรีวิว แล้วกลับมาดูที่นี่อีกครั้ง 🍿</p>';
+      return;
+    }
+    const bars = t.genres.map((g) => `
+      <div class="taste-row">
+        <span class="taste-label">${escapeHTML(g.name)}</span>
+        <div class="taste-bar"><span style="width:${Math.max(4, Number(g.share) || 0)}%"></span></div>
+        <span class="taste-pct">${Number(g.share) || 0}%</span>
+      </div>`).join('');
+    const chips = (title, list) => list.length ? `
+      <div class="taste-group">
+        <div class="taste-group-title">${title}</div>
+        <div class="stickers">${list.map((p) => `<span class="sticker">${escapeHTML(p.name)}</span>`).join('')}</div>
+      </div>` : '';
+    const decade = t.favoriteDecade ? `<div class="taste-group"><div class="taste-group-title">ยุคที่ชอบ</div><div class="stickers"><span class="sticker">${Number(t.favoriteDecade)}s</span></div></div>` : '';
+    el.innerHTML = `
+      <div class="taste-bars">${bars}</div>
+      ${chips('ผู้กำกับที่คุณสนใจ', t.directors)}
+      ${chips('นักแสดงที่คุณน่าจะชอบ', t.stars)}
+      ${decade}
+      <p class="taste-foot">จากหนังที่เปิดดู ${t.counts.viewed} เรื่อง · Watchlist ${t.counts.watchlist} เรื่อง · รีวิว ${t.counts.reviews} เรื่อง</p>`;
+  } catch (error) {
+    console.error(error);
+    el.innerHTML = '<p class="taste-empty">โหลดข้อมูลรสนิยมไม่สำเร็จ ลองใหม่อีกครั้ง</p>';
+  }
+}
+
+// บันทึกว่าเปิดดูหนังเรื่องนี้ (เป็นสัญญาณรสนิยมแบบเบา) นับครั้งเดียวต่อเรื่องต่อ session กันรีเฟรชรัวๆ
+function trackView(movieId) {
+  const key = `viewed:${movieId}`;
+  try {
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, '1');
+  } catch (e) { /* sessionStorage ใช้ไม่ได้ก็ข้าม */ }
+  fetchJson('/api/views', { method: 'POST', body: JSON.stringify({ movieId: Number(movieId) }) }).catch(() => {});
+}
+
+async function initSimilarMovies(movieId) {
+  const section = document.getElementById('similarSection');
+  const grid = document.getElementById('similarGrid');
+  if (!section || !grid) return;
+  try {
+    const items = await fetchJson(`/api/movies/${encodeURIComponent(movieId)}/similar?limit=4`);
+    if (!Array.isArray(items) || !items.length) return;
+    grid.innerHTML = items.map((m) => `
+      <div class="reco-item">
+        ${movieCardHTML(m)}
+        <div class="reco-meta"><span class="reco-reason reason-similar">${escapeHTML(m.reason || '')}</span></div>
+      </div>`).join('');
+    section.hidden = false;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function getMovies() {
@@ -706,6 +846,9 @@ async function initDetailPage() {
     if (watchlistBtn) {
       initWatchlistButton(watchlistBtn, movie.id);
     }
+    // ระบบแนะนำ: จดว่าผู้ใช้เปิดดูเรื่องนี้ + โชว์หนังที่คล้ายกัน (ไม่รอ ไม่ให้ขวางการโหลดรีวิว)
+    trackView(movie.id);
+    initSimilarMovies(movie.id);
     if (reviewSection) {
       // แก้บั๊ก: เดิมเทียบ item.movieId (string จาก URL param) === movie.id (number จาก API)
       // ซึ่งเป็นคนละชนิดข้อมูลเลยไม่ตรงกันเกือบทุกครั้ง ตอนนี้แปลงเป็น Number ทั้งคู่ก่อนเทียบ
@@ -855,6 +998,8 @@ document.addEventListener('DOMContentLoaded', () => {
   attachUsernameChecker('pageRegUsername', 'pageUsernameStatus');
 
   initMoodPicker();
+  initRecommendations();
+  initTasteProfile();
   initSearchPage();
   initSpoilerShield();
   initWriteReview();

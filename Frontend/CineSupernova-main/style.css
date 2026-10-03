@@ -551,3 +551,68 @@ mark{
   text-align: center;
   min-height: 1.2em;
 }
+
+/* ========== PERSONALIZED RECOMMENDATIONS ========== */
+.for-you{margin-top:56px;}
+.for-you .section-head{margin-bottom:8px;}
+.for-you-basis{
+  font-size:.84rem;font-weight:600;color:var(--butter);
+  background:rgba(255,200,87,.1);border:1px solid rgba(255,200,87,.25);
+  padding:4px 12px;border-radius:999px;
+}
+.for-you-basis:empty{display:none;}
+.for-you-note{font-size:.88rem;color:var(--text-dim);margin:0 0 20px;max-width:640px;}
+.for-you-note:empty{display:none;}
+
+.reco-item{
+  display:flex;flex-direction:column;gap:10px;
+  transition:opacity .25s var(--ease), transform .25s var(--ease);
+}
+.reco-item .ticket-card{flex:1;}
+.reco-item.removing{opacity:0;transform:scale(.94);}
+.reco-meta{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:0 4px;min-height:30px;
+}
+.reco-reason{
+  font-size:.76rem;font-weight:600;line-height:1.4;
+  color:var(--mint);
+}
+.reco-reason.reason-popular{color:var(--text-dim);}
+.reco-reason.reason-explore{color:var(--coral-soft);}
+.reco-reason.reason-similar{color:var(--coral-soft);}
+.reco-reason.reason-director,
+.reco-reason.reason-star{color:var(--butter);}
+.reco-dismiss{
+  flex-shrink:0;background:none;border:1px solid var(--border);
+  color:var(--text-dim);font-size:.72rem;font-weight:600;
+  padding:4px 10px;border-radius:999px;cursor:pointer;
+  transition:color .2s var(--ease), border-color .2s var(--ease);
+}
+.reco-dismiss:hover{color:var(--coral-soft);border-color:var(--coral-soft);}
+.reco-dismiss:disabled{opacity:.5;cursor:default;}
+
+.similar-section{margin-top:48px;}
+.similar-section[hidden]{display:none;}
+
+/* โปรไฟล์: รสนิยมหนัง */
+.taste-card{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:var(--radius-m);padding:20px 22px;
+}
+.taste-empty{margin:0;color:var(--text-dim);font-size:.92rem;}
+.taste-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.taste-label{width:92px;flex-shrink:0;font-size:.88rem;font-weight:600;color:var(--text-primary);}
+.taste-bar{flex:1;height:10px;border-radius:999px;background:var(--bg-card-soft);overflow:hidden;}
+.taste-bar span{
+  display:block;height:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--coral),var(--butter));
+}
+.taste-pct{width:42px;text-align:right;font-size:.8rem;color:var(--text-muted);font-weight:600;}
+.taste-group{margin-top:16px;}
+.taste-group-title{font-size:.8rem;font-weight:600;color:var(--text-dim);margin-bottom:-4px;}
+.taste-foot{margin:18px 0 0;font-size:.78rem;color:var(--text-dim);}
+
+@media (max-width:520px){
+  .taste-label{width:72px;}
+}

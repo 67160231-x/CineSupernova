@@ -105,3 +105,63 @@ curl "http://localhost:3000/api/movies?limit=3"
   pagination/search ฝั่ง server เพื่อความเร็วที่ดีขึ้น)
 - ไฟล์ `csv/movies.csv` เป็นไฟล์ต้นทางดิบที่ไม่ได้ถูกใช้ในโค้ดจริง (ใช้ `cleaned_movies.json` เท่านั้น)
   ทิ้งไว้เฉยๆ ไม่กระทบการทำงาน
+
+
+---
+
+# ฟีเจอร์ใหม่: แนะนำหนังเฉพาะบุคคล 🎯
+
+ระบบเรียนรู้รสนิยมของผู้ใช้แต่ละคนจากพฤติกรรมจริง แล้วแนะนำหนังที่ "เป็นสไตล์ของคุณ"
+
+## ทำงานยังไง
+
+สัญญาณที่ใช้ (น้ำหนักมาก → น้อย): **รีวิว + ให้คะแนน** (4–5 ดาว = ชอบ, ต่ำกว่า 3 = ไม่ชอบ) > **เพิ่มลง Watchlist** > **เปิดดูหน้ารายละเอียดหนัง** — และ **กด "ไม่สนใจ"** จะเป็นน้ำหนักลบ
+
+- สร้าง "โปรไฟล์รสนิยม" จาก แนวหนัง / ผู้กำกับ / นักแสดง / ยุค — พฤติกรรมเก่าจะค่อยๆ มีน้ำหนักลดลง
+- ให้คะแนนหนังที่ยังไม่เคยดู ตามความตรงกับโปรไฟล์ + คุณภาพหนัง (ถ่วงด้วยจำนวนโหวต)
+- แนวที่มีหนังน้อย (เช่น Sci-Fi มีแค่ 6 เรื่อง) จะดึงจาก "แนวใกล้เคียง" มาเติมให้ (Action, Fantasy, Adventure ฯลฯ)
+- ไม่แนะนำเรื่องที่รีวิว/เก็บไว้/กดไม่สนใจแล้ว, จำกัดไม่ให้แนวหรือผู้กำกับเดียวกันซ้ำเยอะ และเปิดช่อง "ลองแนวใหม่ๆ" 1 เรื่อง
+- ผู้ใช้ใหม่ที่ยังไม่มีพฤติกรรมจะเห็นหนังคะแนนสูงที่คนดูเยอะ พร้อมข้อความชวนให้ดู/รีวิวเพื่อให้ระบบรู้จักรสนิยม
+
+## ที่โชว์ในเว็บ
+
+| หน้า | สิ่งที่เพิ่ม |
+|---|---|
+| หน้าแรก | "🎯 เลือกให้คุณโดยเฉพาะ" 8 เรื่อง พร้อมเหตุผลใต้การ์ด (เช่น "เพราะคุณชอบหนังแนว Horror") และปุ่ม "ไม่สนใจ ✕" |
+| หน้า detail | "🎞️ ถ้าชอบเรื่องนี้ ลองดูเรื่องนี้ด้วย" + บันทึกว่าเปิดดูเรื่องนี้ |
+| หน้า Profile | "🎨 รสนิยมหนังของคุณ" กราฟแนวที่ชอบ ผู้กำกับ/นักแสดง/ยุคที่สนใจ |
+
+## ขั้นตอนเปิดใช้งาน (ทำครั้งเดียว)
+
+1. Supabase Dashboard > **SQL Editor** > New query
+2. คัดลอก `Backend/sql/migration_recommendations.sql` ไปรัน (สร้างตาราง `movie_views`, `movie_dismissals` + index; รันซ้ำได้ปลอดภัย)
+   - ถ้าติดตั้งใหม่ทั้งหมดจาก `schema.sql` เวอร์ชันนี้ ตารางเหล่านี้มีอยู่แล้ว ไม่ต้องรันไฟล์นี้
+3. Deploy / restart backend ตามปกติ
+
+ถ้ายังไม่ได้รัน migration ระบบจะไม่พัง — จะแนะนำจากรีวิวและ Watchlist ไปก่อน (ยังไม่บันทึกการเปิดดู และปุ่ม "ไม่สนใจ" จะยังใช้ไม่ได้)
+
+> ⚠️ `seed_movies.sql` มี `TRUNCATE movies ... CASCADE` ซึ่งจะล้างตาราง `movie_views` / `movie_dismissals` ด้วย (เหมือนที่ล้างรีวิวและ Watchlist) อย่ารันซ้ำถ้ามีข้อมูลจริงที่อยากเก็บ
+
+## API ใหม่ (ดูรายละเอียดที่ `/docs`)
+
+| Endpoint | หมายเหตุ |
+|---|---|
+| `GET /api/recommendations?limit=12` | ต้องล็อกอิน — แต่ละเรื่องมี `reason` / `reasonType` |
+| `POST /api/recommendations/dismiss` `{movieId}` | ต้องล็อกอิน |
+| `GET /api/taste-profile` | ต้องล็อกอิน |
+| `POST /api/views` `{movieId}` | ต้องล็อกอิน |
+| `GET /api/movies/:id/similar?limit=4` | ไม่ต้องล็อกอิน |
+
+## เทสต์
+
+```bash
+cd Backend
+npm run test:offline   # 18 เทสต์ ใช้ Supabase จำลอง ไม่ต้องตั้งค่า .env
+npm test               # เทสต์เดิม (ยิง Supabase จริง) + เทสต์ใหม่ทั้งหมด
+```
+
+## ไฟล์ที่เพิ่ม/แก้
+
+- ใหม่: `Backend/recommender.js` (logic ล้วน), `Backend/recommendation-service.js` (ดึงข้อมูลจาก Supabase), `Backend/sql/migration_recommendations.sql`, `Backend/tests/recommender.test.js`, `Backend/tests/recommendations.api.test.js`, `Backend/tests/helpers/fake-supabase.js`
+- แก้: `Backend/server.js` (route ใหม่), `Backend/database.js` (ฟังก์ชันบันทึกการเปิดดู/ไม่สนใจ), `Backend/sql/schema.sql`, `Backend/package.json`, `Frontend/.../app.js`, `index.html`, `detail.html`, `profile.html`, `style.css`, `swagger.json`
+- แถม: เพิ่ม `escapeHTML` ในการ์ดหนัง (`movieCardHTML`) กัน HTML แทรกจากข้อมูล
