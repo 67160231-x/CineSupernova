@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ค้นหาหนัง — CineSupernova</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/favicon-180.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +14,7 @@
 
 <nav class="navbar">
   <div class="wrap">
-    <a href="index.html" class="brand"><span class="spark">🎬</span> CineSupernova</a>
+    <a href="index.html" class="brand"><img class="brand-logo" src="assets/logo-128.png" alt="CineSupernova"> CineSupernova</a>
     <div class="nav-links">
       <a href="index.html">หน้าแรก</a>
       <a href="search.html" class="active">ค้นหา</a>
@@ -28,17 +30,47 @@
     <h1 style="margin-bottom:24px;">หาหนังที่ตรงใจคุณ</h1>
 
     <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="พิมพ์ชื่อหนัง หรือความรู้สึกที่อยากได้...">
+      <input type="text" id="searchInput" placeholder="พิมพ์ชื่อหนัง ผู้กำกับ นักแสดง หรือความรู้สึกที่อยากได้...">
       <button class="btn btn-primary" id="searchBtn">ค้นหา</button>
     </div>
 
-    <div class="tag-filters" id="tagFilters">
-      <button class="tag-btn" data-tag="หักมุมจนหัวหมุน">😵‍💫 หักมุมจนหัวหมุน</button>
-      <button class="tag-btn" data-tag="ตับพัง 3 วัน">💔 ตับพัง 3 วัน</button>
-      <button class="tag-btn" data-tag="ดูจบแล้วอยากกอดใครสักคน">🤗 อยากกอดใครสักคน</button>
-      <button class="tag-btn" data-tag="ปิดไฟดูคนเดียวเท่านั้น">🌙 ปิดไฟดูคนเดียว</button>
-      <button class="tag-btn" data-tag="ฮาจนสำลักป๊อปคอร์น">😂 ฮาจนสำลักป๊อปคอร์น</button>
-      <button class="tag-btn" data-tag="วิทยาศาสตร์งงแต่เท่">🛸 งงแต่เท่</button>
+    <div class="filter-block">
+      <div class="filter-label">Vibe <span>เลือกได้หลายอัน</span></div>
+      <div class="tag-filters" id="tagFilters">
+        <button class="tag-btn" data-tag="หักมุมจนหัวหมุน">😵‍💫 หักมุมจนหัวหมุน</button>
+        <button class="tag-btn" data-tag="ตับพัง 3 วัน">💔 ตับพัง 3 วัน</button>
+        <button class="tag-btn" data-tag="ดูจบแล้วอยากกอดใครสักคน">🤗 อยากกอดใครสักคน</button>
+        <button class="tag-btn" data-tag="ปิดไฟดูคนเดียวเท่านั้น">🌙 ปิดไฟดูคนเดียว</button>
+        <button class="tag-btn" data-tag="ฮาจนสำลักป๊อปคอร์น">😂 ฮาจนสำลักป๊อปคอร์น</button>
+        <button class="tag-btn" data-tag="วิทยาศาสตร์งงแต่เท่">🛸 งงแต่เท่</button>
+      </div>
+    </div>
+
+    <div class="filter-block">
+      <div class="filter-label">ประเภทหนัง <span>เลือกได้หลายประเภท (แสดงเฉพาะประเภทที่มีหนังในระบบ)</span></div>
+      <div class="tag-filters" id="genreFilters"></div>
+    </div>
+
+    <div class="filter-bar">
+      <label class="filter-field">ปีที่ฉาย ตั้งแต่
+        <select id="yearFrom"><option value="">ทุกปี</option></select>
+      </label>
+      <label class="filter-field">ถึงปี
+        <select id="yearTo"><option value="">ทุกปี</option></select>
+      </label>
+      <label class="filter-field">คะแนนขั้นต่ำ
+        <select id="minScore">
+          <option value="">ทุกคะแนน</option>
+          <option value="5">5.0 ขึ้นไป</option>
+          <option value="6">6.0 ขึ้นไป</option>
+          <option value="7">7.0 ขึ้นไป</option>
+          <option value="8">8.0 ขึ้นไป</option>
+        </select>
+      </label>
+      <label class="filter-field">เรียงตาม
+        <select id="sortBy"></select>
+      </label>
+      <button class="btn btn-ghost btn-sm" id="resetFiltersBtn" style="display:none;">✕ ล้างตัวกรองทั้งหมด</button>
     </div>
 
     <div class="section-head">
@@ -50,8 +82,8 @@
 
     <div class="empty-state" id="emptyState">
       <div class="glyph">🛸</div>
-      <h3>ไม่พบหนังในจักรวาลนี้ที่ตรง Vibe ของคุณ</h3>
-      <p>ลองลบแท็กบางอันออก หรือเปลี่ยนคำค้นหาดูนะ</p>
+      <h3>ไม่พบหนังในจักรวาลนี้ที่ตรงกับตัวกรองของคุณ</h3>
+      <p>ลองลบตัวกรองบางอันออก หรือเปลี่ยนคำค้นหาดูนะ</p>
       <button class="btn btn-ghost btn-sm" id="clearFiltersBtn">ล้างตัวกรองทั้งหมด</button>
     </div>
   </div>
@@ -59,6 +91,7 @@
 
 <footer>CineSupernova — โปรเจกต์ตัวอย่างจาก User Journey · ข้อมูลทั้งหมดเป็น mock data</footer>
 
+<script src="search-filters.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

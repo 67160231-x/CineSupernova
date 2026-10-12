@@ -7,6 +7,7 @@ const { URL } = require('url');
 const { initDb, addReview, getReviews, getWatchlist, addToWatchlist, removeFromWatchlist } = require('./database');
 const movieService = require('./movies');
 const auth = require('./auth');
+const passwordReset = require('./password-reset');
 const recService = require('./recommendation-service');
 const { recordView, addDismissal } = require('./database');
 
@@ -119,6 +120,48 @@ function createServer() {
       try {
         const body = await parseBody(req);
         const result = await auth.login(body);
+        sendJSON(res, 200, result);
+      } catch (error) {
+        sendJSON(res, error.status || 400, { error: error.message || 'Bad request' });
+      }
+      return;
+    }
+
+    // ลืมรหัสผ่าน: ขอลิงก์รีเซ็ต (ตอบข้อความเดียวกันเสมอ ไม่บอกว่ามีอีเมลนี้ในระบบหรือไม่)
+    if (req.method === 'POST' && pathname === '/api/forgot-password') {
+      try {
+        const clientIp = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+        if (!passwordReset.allowIp(clientIp)) {
+          sendJSON(res, 429, { error: 'ขอรีเซ็ตรหัสผ่านบ่อยเกินไป กรุณาลองใหม่ภายหลัง' });
+          return;
+        }
+        const body = await parseBody(req);
+        const proto = String(req.headers['x-forwarded-proto'] || 'http').split(',')[0].trim();
+        const requestOrigin = req.headers.host ? `${proto}://${req.headers.host}` : null;
+        const result = await passwordReset.requestPasswordReset({ email: body.email, requestOrigin });
+        sendJSON(res, 200, result);
+      } catch (error) {
+        sendJSON(res, error.status || 400, { error: error.message || 'Bad request' });
+      }
+      return;
+    }
+
+    // ตรวจว่าลิงก์รีเซ็ตยังใช้ได้ไหม
+    if (req.method === 'GET' && pathname === '/api/reset-password/check') {
+      try {
+        const valid = await passwordReset.checkResetToken(reqUrl.searchParams.get('token'));
+        sendJSON(res, 200, { valid });
+      } catch (error) {
+        sendJSON(res, error.status || 500, { error: error.message || 'เกิดข้อผิดพลาด' });
+      }
+      return;
+    }
+
+    // ตั้งรหัสผ่านใหม่ด้วย token จากอีเมล
+    if (req.method === 'POST' && pathname === '/api/reset-password') {
+      try {
+        const body = await parseBody(req);
+        const result = await passwordReset.resetPassword({ token: body.token, newPassword: body.newPassword });
         sendJSON(res, 200, result);
       } catch (error) {
         sendJSON(res, error.status || 400, { error: error.message || 'Bad request' });

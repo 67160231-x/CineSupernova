@@ -210,6 +210,97 @@
           }
         }
       }
+    },
+    "/api/forgot-password": {
+      "post": {
+        "summary": "ลืมรหัสผ่าน: ขอลิงก์ตั้งรหัสผ่านใหม่ทางอีเมล (ตอบข้อความเดียวกันเสมอ ไม่บอกว่ามีอีเมลนี้ในระบบหรือไม่)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "example@email.com"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "รับคำขอแล้ว"
+          },
+          "400": {
+            "description": "อีเมลว่างหรือรูปแบบไม่ถูกต้อง"
+          },
+          "429": {
+            "description": "ขอบ่อยเกินไป"
+          }
+        }
+      }
+    },
+    "/api/reset-password/check": {
+      "get": {
+        "summary": "เช็คว่าลิงก์รีเซ็ตรหัสผ่านยังใช้ได้ไหม",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{ valid: true | false }"
+          }
+        }
+      }
+    },
+    "/api/reset-password": {
+      "post": {
+        "summary": "ตั้งรหัสผ่านใหม่ด้วย token จากอีเมล (ใช้ได้ครั้งเดียว อายุ 30 นาที) และเตะทุกอุปกรณ์ออกจากระบบ",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "minLength": 6
+                  }
+                },
+                "required": [
+                  "token",
+                  "newPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ตั้งรหัสผ่านใหม่สำเร็จ"
+          },
+          "400": {
+            "description": "ลิงก์ไม่ถูกต้อง/หมดอายุ หรือรหัสผ่านสั้นเกินไป"
+          }
+        }
+      }
     }
   },
   "components": {

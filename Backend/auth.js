@@ -161,6 +161,7 @@ async function deleteUser(userId) {
 }
 
 module.exports = {
+  hashPassword,
   register,
   login,
   logout,

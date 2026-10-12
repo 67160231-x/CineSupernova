@@ -110,3 +110,16 @@ create policy "public read movies" on movies for select using (true);
 drop policy if exists "public read reviews" on reviews;
 create policy "public read reviews" on reviews for select using (true);
 -- users / sessions / watchlist_items: ไม่มี policy ให้ anon key เลย = เข้าไม่ได้เลยนอกจาก service_role
+
+-- ============================================================================
+-- ลืมรหัสผ่าน (ดู migration_password_reset.sql ถ้าฐานข้อมูลเดิมมีอยู่แล้ว ให้รันไฟล์นั้นแทน)
+-- ============================================================================
+create table if not exists password_resets (
+  id bigserial primary key,
+  user_id bigint not null references users(id) on delete cascade,
+  token_hash text not null unique,
+  expires_at timestamptz not null,
+  used_at timestamptz,
+  created_at timestamptz not null default now()
+);
+alter table password_resets enable row level security;

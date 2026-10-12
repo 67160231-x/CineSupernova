@@ -6,7 +6,7 @@
   // รองรับกรณีเข้าผ่าน Root Path ('/')
   if (!currentPage) currentPage = 'index.html';
 
-  const publicPages = ['login.html'];
+  const publicPages = ['login.html', 'reset-password.html'];
 
   if (!token && !publicPages.includes(currentPage)) {
     window.location.href = 'login.html';
@@ -577,63 +577,114 @@ async function initMoodPicker() {
 async function initSearchPage() {
   const grid = document.getElementById('resultsGrid');
   if (!grid) return;
+  const SF = window.SearchFilters;
   const emptyState = document.getElementById('emptyState');
-  const tagButtons = document.querySelectorAll('.tag-btn');
+  const vibeButtons = document.querySelectorAll('.tag-btn[data-tag]');
+  const genreWrap = document.getElementById('genreFilters');
   const searchInput = document.getElementById('searchInput');
   const searchBtn = document.getElementById('searchBtn');
   const clearBtn = document.getElementById('clearFiltersBtn');
+  const resetBtn = document.getElementById('resetFiltersBtn');
+  const yearFromEl = document.getElementById('yearFrom');
+  const yearToEl = document.getElementById('yearTo');
+  const minScoreEl = document.getElementById('minScore');
+  const sortEl = document.getElementById('sortBy');
   const resultsCount = document.getElementById('resultsCount');
   const resultsTitle = document.getElementById('resultsTitle');
 
   const movies = await getMovies();
-  const selectedTags = new Set();
+  const state = { q: '', vibes: new Set(), genres: new Set(), yearFrom: '', yearTo: '', minScore: '', sort: 'score' };
 
-  function applyFilters() {
-    const q = searchInput ? searchInput.value.trim().toLowerCase() : '';
-    const filtered = movies.filter((m) => {
-      const matchesText = !q || m.title.toLowerCase().includes(q) || (m.genre && m.genre.toLowerCase().includes(q));
-      const matchesTags = selectedTags.size === 0 || (m.tags && m.tags.some((t) => selectedTags.has(t)));
-      return matchesText && matchesTags;
-    });
+  // ตัวเลือกประเภทหนัง + ช่วงปี สร้างจากข้อมูลที่มีจริงในระบบ (เพิ่มหนังประเภทใหม่/ปีใหม่ → โผล่เองอัตโนมัติ)
+  const facets = SF.buildFacets(movies);
+  if (genreWrap) {
+    genreWrap.innerHTML = facets.genres.map((g) => (
+      `<button type="button" class="tag-btn" data-genre="${escapeHTML(g.value)}">${genreArt(g.value).icon} ${escapeHTML(g.label)} <span class="tag-count">${g.count}</span></button>`
+    )).join('');
+  }
+  const yearOptions = '<option value="">ทุกปี</option>' + facets.years.map((y) => `<option value="${y}">${y}</option>`).join('');
+  if (yearFromEl) yearFromEl.innerHTML = yearOptions;
+  if (yearToEl) yearToEl.innerHTML = yearOptions;
+  if (sortEl) sortEl.innerHTML = Object.entries(SF.SORTS).map(([k, label]) => `<option value="${k}">${label}</option>`).join('');
 
+  function render() {
+    const filtered = SF.applyFilters(movies, state);
+    const active = SF.hasActiveFilters(state);
     if (filtered.length === 0) {
       grid.innerHTML = '';
       if (emptyState) emptyState.classList.add('show');
-      if (resultsCount) resultsCount.textContent = '0 เรื่อง';
     } else {
       if (emptyState) emptyState.classList.remove('show');
       grid.innerHTML = filtered.map(movieCardHTML).join('');
-      if (resultsCount) resultsCount.textContent = `${filtered.length} เรื่อง`;
     }
-    if (resultsTitle) resultsTitle.textContent = selectedTags.size ? 'ผลลัพธ์ที่ตรง Vibe' : 'หนังทั้งหมด';
+    if (resultsCount) resultsCount.textContent = `${filtered.length} เรื่อง`;
+    if (resultsTitle) resultsTitle.textContent = active ? 'ผลลัพธ์ที่ตรงกับตัวกรอง' : 'หนังทั้งหมด';
+    if (resetBtn) resetBtn.style.display = active ? 'inline-flex' : 'none';
   }
 
-  tagButtons.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const tag = btn.dataset.tag;
-      if (selectedTags.has(tag)) {
-        selectedTags.delete(tag);
-        btn.classList.remove('selected');
-      } else {
-        selectedTags.add(tag);
-        btn.classList.add('selected');
+  function toggleIn(set, value, btn) {
+    if (set.has(value)) { set.delete(value); btn.classList.remove('selected'); }
+    else { set.add(value); btn.classList.add('selected'); }
+    render();
+  }
+
+  vibeButtons.forEach((btn) => btn.addEventListener('click', () => toggleIn(state.vibes, btn.dataset.tag, btn)));
+  if (genreWrap) {
+    genreWrap.querySelectorAll('.tag-btn[data-genre]').forEach((btn) => {
+      btn.addEventListener('click', () => toggleIn(state.genres, btn.dataset.genre, btn));
+    });
+  }
+
+  // ช่วงปี: ถ้าเลือก "ตั้งแต่" มากกว่า "ถึง" ให้ปรับอีกช่องตามอัตโนมัติ
+  if (yearFromEl) {
+    yearFromEl.addEventListener('change', () => {
+      state.yearFrom = yearFromEl.value;
+      if (state.yearFrom && state.yearTo && Number(state.yearFrom) > Number(state.yearTo)) {
+        state.yearTo = state.yearFrom;
+        yearToEl.value = state.yearTo;
       }
-      applyFilters();
-    });
-  });
-
-  if (searchBtn) searchBtn.addEventListener('click', applyFilters);
-  if (searchInput) searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') applyFilters(); });
-  if (clearBtn) {
-    clearBtn.addEventListener('click', () => {
-      selectedTags.clear();
-      if (searchInput) searchInput.value = '';
-      tagButtons.forEach((b) => b.classList.remove('selected'));
-      applyFilters();
+      render();
     });
   }
+  if (yearToEl) {
+    yearToEl.addEventListener('change', () => {
+      state.yearTo = yearToEl.value;
+      if (state.yearFrom && state.yearTo && Number(state.yearTo) < Number(state.yearFrom)) {
+        state.yearFrom = state.yearTo;
+        yearFromEl.value = state.yearFrom;
+      }
+      render();
+    });
+  }
+  if (minScoreEl) minScoreEl.addEventListener('change', () => { state.minScore = minScoreEl.value; render(); });
+  if (sortEl) sortEl.addEventListener('change', () => { state.sort = sortEl.value; render(); });
 
-  applyFilters();
+  // พิมพ์แล้วกรองทันที (หน่วงนิดเดียวไม่ให้กระตุก) / กด Enter / กดปุ่มค้นหา ก็ได้
+  let typingTimer = null;
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => { state.q = searchInput.value; render(); }, 180);
+    });
+    searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') { state.q = searchInput.value; render(); } });
+  }
+  if (searchBtn) searchBtn.addEventListener('click', () => { state.q = searchInput ? searchInput.value : ''; render(); });
+
+  function resetAll() {
+    state.q = ''; state.vibes.clear(); state.genres.clear();
+    state.yearFrom = ''; state.yearTo = ''; state.minScore = ''; state.sort = 'score';
+    if (searchInput) searchInput.value = '';
+    document.querySelectorAll('.tag-btn.selected').forEach((b) => b.classList.remove('selected'));
+    if (yearFromEl) yearFromEl.value = '';
+    if (yearToEl) yearToEl.value = '';
+    if (minScoreEl) minScoreEl.value = '';
+    if (sortEl) sortEl.value = 'score';
+    render();
+  }
+  if (clearBtn) clearBtn.addEventListener('click', resetAll);
+  if (resetBtn) resetBtn.addEventListener('click', resetAll);
+
+  render();
 }
 
 function initSpoilerShield() {
@@ -701,11 +752,15 @@ function initWriteReview() {
   }
 
   if (submitBtn) {
+    const spoilerSelect = document.getElementById('spoilerSelect');
     submitBtn.addEventListener('click', async () => {
       if (!textarea.value.trim()) {
         textarea.focus();
         return;
       }
+      const originalLabel = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'กำลังส่งรีวิว...';
       try {
         let authorName = 'สมาชิกทั่วไป';
         const token = getToken();
@@ -727,13 +782,17 @@ function initWriteReview() {
             author: authorName,
             rating: ratingValue || 5,
             text: textarea.value,
-            spoiler: false
+            spoiler: Boolean(spoilerSelect && spoilerSelect.value === 'yes')
           })
         });
         submitBtn.textContent = 'ส่งรีวิวแล้ว ✓ +50 XP';
-        submitBtn.disabled = true;
+        // ส่งเสร็จให้เด้งออกจากหน้าเขียนรีวิว ไปหน้าหนังเรื่องนี้ (เห็นรีวิวที่เพิ่งเขียน) จะได้ค้นหาหนังเรื่องต่อไปได้เลย
+        // ใช้ replace เพื่อไม่ให้กดย้อนกลับแล้วกลับมาเจอฟอร์มรีวิวที่ส่งไปแล้ว
+        setTimeout(() => { window.location.replace(`detail.html?id=${encodeURIComponent(movieId)}`); }, 900);
       } catch (error) {
-        submitBtn.textContent = 'ส่งรีวิวไม่สำเร็จ';
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+        alert(`ส่งรีวิวไม่สำเร็จ: ${error.message || 'กรุณาลองใหม่อีกครั้ง'}`);
         console.error(error);
       }
     });
@@ -863,11 +922,11 @@ async function initDetailPage() {
         <div class="section-head"><h2>รีวิวจากนักวิจารณ์</h2></div>
         ${movieReviews.length ? movieReviews.map((review) => `
           <div class="review-block">
-            <div class="author">🧑‍🚀 ${review.author} · ${new Date(review.createdAt).toLocaleDateString('th-TH')} · 🍿${review.rating}</div>
-            <p>${review.text}</p>
+            <div class="author">🧑‍🚀 ${escapeHTML(review.author)} · ${new Date(review.createdAt).toLocaleDateString('th-TH')} · 🍿${review.rating}</div>
+            ${review.spoiler ? '' : `<p>${escapeHTML(review.text)}</p>`}
             ${review.spoiler ? `
               <div class="spoiler-wrap">
-                <p class="spoiler-blur">${review.text}</p>
+                <p class="spoiler-blur">${escapeHTML(review.text)}</p>
                 <div class="spoiler-overlay">
                   <button class="btn btn-ghost btn-sm spoiler-btn">🙈 คลิกยืนยัน 3 ครั้งเพื่อดูสปอยล์</button>
                   <span class="count spoiler-count">คลิกแล้ว 0 / 3</span>
@@ -988,8 +1047,143 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
   ctx.fillText(line, x, curY);
 }
 
+// ---------- ลืมรหัสผ่าน (ปุ่มในหน้า login) ----------
+function initForgotPassword() {
+  const link = document.getElementById('forgotLink');
+  const form = document.getElementById('pageForgotForm');
+  if (!link || !form) return;
+
+  const tabs = document.querySelector('.auth-tabs');
+  const loginForm = document.getElementById('pageLoginForm');
+  const regForm = document.getElementById('pageRegisterForm');
+  const tabLogin = document.getElementById('pageTabLogin');
+  const tabRegister = document.getElementById('pageTabRegister');
+  const emailInput = document.getElementById('pageForgotEmail');
+  const msg = document.getElementById('pageForgotMsg');
+  const demoBox = document.getElementById('pageForgotDemo');
+  const btn = document.getElementById('pageForgotBtn');
+  const back = document.getElementById('forgotBack');
+
+  function setMsg(text, ok) {
+    msg.textContent = text;
+    msg.classList.toggle('success-msg', Boolean(ok));
+    msg.classList.toggle('error-msg', !ok);
+  }
+
+  link.addEventListener('click', () => {
+    if (tabs) tabs.classList.add('hidden');
+    if (loginForm) loginForm.classList.add('hidden');
+    if (regForm) regForm.classList.add('hidden');
+    form.classList.remove('hidden');
+    setMsg('', true);
+    demoBox.classList.add('hidden');
+    const typed = (document.getElementById('pageUsername') || {}).value || '';
+    if (typed.includes('@') && !emailInput.value) emailInput.value = typed.trim();
+    emailInput.focus();
+  });
+
+  back.addEventListener('click', () => {
+    form.classList.add('hidden');
+    if (tabs) tabs.classList.remove('hidden');
+    if (tabLogin) tabLogin.classList.add('active');
+    if (tabRegister) tabRegister.classList.remove('active');
+    if (loginForm) loginForm.classList.remove('hidden');
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    setMsg('', true);
+    demoBox.classList.add('hidden');
+    demoBox.textContent = '';
+    const email = emailInput.value.trim();
+    if (!email) {
+      setMsg('กรุณากรอกอีเมล', false);
+      return;
+    }
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'กำลังส่ง...';
+    try {
+      const res = await fetchJson('/api/forgot-password', { method: 'POST', body: JSON.stringify({ email }) });
+      setMsg(res.message || 'ส่งลิงก์ตั้งรหัสผ่านใหม่แล้ว', true);
+      // โหมดสาธิต (เซิร์ฟเวอร์ตั้ง PASSWORD_RESET_DEMO=true): โชว์ลิงก์ให้กดเลย ไม่ต้องรออีเมล
+      if (res.demoResetLink) {
+        demoBox.textContent = 'โหมดสาธิต: ';
+        const a = document.createElement('a');
+        a.href = res.demoResetLink;
+        a.textContent = 'เปิดลิงก์ตั้งรหัสผ่านใหม่';
+        demoBox.appendChild(a);
+        demoBox.classList.remove('hidden');
+      }
+      btn.textContent = 'ส่งแล้ว ✓';
+      setTimeout(() => { btn.disabled = false; btn.textContent = label; }, 8000);
+    } catch (err) {
+      setMsg(err.message || 'ส่งลิงก์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง', false);
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+  });
+}
+
+// ---------- หน้าตั้งรหัสผ่านใหม่ (reset-password.html — เปิดจากลิงก์ในอีเมล) ----------
+function initResetPassword() {
+  const form = document.getElementById('resetForm');
+  if (!form) return;
+
+  const token = new URLSearchParams(window.location.search).get('token') || '';
+  const invalidBox = document.getElementById('resetInvalid');
+  const msg = document.getElementById('resetMsg');
+  const btn = document.getElementById('resetBtn');
+  const pw1 = document.getElementById('resetPassword');
+  const pw2 = document.getElementById('resetPassword2');
+
+  function setMsg(text, ok) {
+    msg.textContent = text;
+    msg.classList.toggle('success-msg', Boolean(ok));
+    msg.classList.toggle('error-msg', !ok);
+  }
+  function showInvalid() {
+    form.classList.add('hidden');
+    invalidBox.classList.remove('hidden');
+  }
+
+  (async () => {
+    if (!token) { showInvalid(); return; }
+    try {
+      const res = await fetchJson(`/api/reset-password/check?token=${encodeURIComponent(token)}`);
+      if (res.valid) form.classList.remove('hidden');
+      else showInvalid();
+    } catch (err) {
+      form.classList.remove('hidden'); // เช็คไม่ได้ (เน็ตสะดุด) ให้กรอกได้ก่อน เดี๋ยวเซิร์ฟเวอร์ตรวจอีกรอบตอนส่ง
+    }
+  })();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    setMsg('', true);
+    if (pw1.value.length < 6) { setMsg('รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร', false); return; }
+    if (pw1.value !== pw2.value) { setMsg('รหัสผ่านทั้งสองช่องไม่ตรงกัน', false); return; }
+    const label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'กำลังบันทึก...';
+    try {
+      const res = await fetchJson('/api/reset-password', { method: 'POST', body: JSON.stringify({ token, newPassword: pw1.value }) });
+      removeToken(); // ทุกอุปกรณ์ถูกเตะออกแล้ว ล้าง token เก่าที่ค้างในเครื่องนี้ด้วย
+      setMsg(`${res.message || 'ตั้งรหัสผ่านใหม่สำเร็จ'} — กำลังพาไปหน้าเข้าสู่ระบบ...`, true);
+      btn.textContent = 'สำเร็จ ✓';
+      setTimeout(() => { window.location.href = 'login.html'; }, 2200);
+    } catch (err) {
+      setMsg(err.message || 'ตั้งรหัสผ่านใหม่ไม่สำเร็จ กรุณาลองใหม่', false);
+      btn.disabled = false;
+      btn.textContent = label;
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initLoginPage();
+  initForgotPassword();
+  initResetPassword();
   initAuthNavbar();
   initAuthModal();
   initChangePasswordForm();

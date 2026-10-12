@@ -1,0 +1,992 @@
+[
+ {
+  "title": "Companion",
+  "mpaa_rating": "R",
+  "genre": "Horror",
+  "year": 2025,
+  "score": 6.9,
+  "director": "Drew Hancock",
+  "writer": "Drew Hancock",
+  "star": "Sophie Thatcher",
+  "country": "USA",
+  "synopsis": "ทริปพักผ่อนสุดสัปดาห์ของคู่รักกลายเป็นฝันร้ายเมื่อความลับของหนึ่งในนั้นเริ่มเผยออกมา",
+  "tags": [
+   "horror",
+   "thriller",
+   "sci-fi"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🤖",
+  "id": 1
+ },
+ {
+  "title": "Wolf Man",
+  "mpaa_rating": "R",
+  "genre": "Horror",
+  "year": 2025,
+  "score": 5.6,
+  "director": "Leigh Whannell",
+  "writer": "Leigh Whannell, Corbett Tuck",
+  "star": "Christopher Abbott",
+  "country": "USA",
+  "synopsis": "ครอบครัวหนึ่งต้องเอาชีวิตรอดในบ้านกลางป่าเมื่อพ่อเริ่มกลายร่างเป็นสัตว์ประหลาดหลังถูกโจมตี",
+  "tags": [
+   "horror",
+   "monster"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🐺",
+  "id": 2
+ },
+ {
+  "title": "Captain America: Brave New World",
+  "mpaa_rating": "PG-13",
+  "genre": "Action",
+  "year": 2025,
+  "score": 5.6,
+  "director": "Julius Onah",
+  "writer": "Malcolm Spellman, Dalan Musson, Matthew Orton",
+  "star": "Anthony Mackie",
+  "country": "USA",
+  "synopsis": "แซม วิลสันในบทบาทกัปตันอเมริกาคนใหม่ ต้องรับมือวิกฤตการเมืองระดับโลกที่อาจนำไปสู่สงคราม",
+  "tags": [
+   "superhero",
+   "action",
+   "marvel"
+  ],
+  "poster_class": "poster-action",
+  "icon": "🛡️",
+  "id": 3
+ },
+ {
+  "title": "The Monkey",
+  "mpaa_rating": "R",
+  "genre": "Horror",
+  "year": 2025,
+  "score": 6.5,
+  "director": "Osgood Perkins",
+  "writer": "Osgood Perkins",
+  "star": "Theo James",
+  "country": "USA",
+  "synopsis": "ของเล่นลิงไขลานเก่าของพ่อที่สองพี่น้องฝาแฝดพบในห้องใต้หลังคา นำมาซึ่งเหตุมรณะสยองขวัญต่อเนื่อง",
+  "tags": [
+   "horror",
+   "comedy",
+   "supernatural"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🐒",
+  "id": 4
+ },
+ {
+  "title": "Flight Risk",
+  "mpaa_rating": "R",
+  "genre": "Thriller",
+  "year": 2025,
+  "score": 5.0,
+  "director": "Mel Gibson",
+  "writer": "Jared Rosenberg",
+  "star": "Mark Wahlberg",
+  "country": "USA",
+  "synopsis": "เจ้าหน้าที่ตำรวจสหพันธรัฐคุ้มกันผู้ให้ปากคำบนเครื่องบินเล็กกลางป่าอะแลสกา แต่นักบินอาจไม่ใช่คนที่ควรไว้ใจ",
+  "tags": [
+   "thriller",
+   "action"
+  ],
+  "poster_class": "poster-action",
+  "icon": "✈️",
+  "id": 5
+ },
+ {
+  "title": "One of Them Days",
+  "mpaa_rating": "R",
+  "genre": "Comedy",
+  "year": 2025,
+  "score": 6.8,
+  "director": "Lawrence Lamont",
+  "writer": "Syreeta Singleton",
+  "star": "Keke Palmer",
+  "country": "USA",
+  "synopsis": "เพื่อนซี้สองคนมีเวลาแค่วันเดียวในการหาเงินค่าเช่าก่อนถูกไล่ออกจากห้อง",
+  "tags": [
+   "comedy",
+   "buddy"
+  ],
+  "poster_class": "poster-comedy",
+  "icon": "😂",
+  "id": 6
+ },
+ {
+  "title": "Predator: Killer of Killers",
+  "mpaa_rating": "PG-13",
+  "genre": "Animation",
+  "year": 2025,
+  "score": 7.2,
+  "director": "Dan Trachtenberg",
+  "writer": "Micho Robert",
+  "star": "Lindsay LaVanchy",
+  "country": "USA",
+  "synopsis": "แอนิเมชันรวมสามเรื่องสั้นที่พาผู้ล่าสุดโหดในประวัติศาสตร์มนุษย์ไปเผชิญหน้ากับพรีเดเตอร์",
+  "tags": [
+   "animation",
+   "action",
+   "sci-fi"
+  ],
+  "poster_class": "poster-scifi",
+  "icon": "👽",
+  "id": 7
+ },
+ {
+  "title": "Predator: Badlands",
+  "mpaa_rating": "PG-13",
+  "genre": "Sci-Fi",
+  "year": 2025,
+  "score": 7.0,
+  "director": "Dan Trachtenberg",
+  "writer": "Dan Trachtenberg, Patrick Aison",
+  "star": "Elle Fanning",
+  "country": "USA",
+  "synopsis": "พรีเดเตอร์หนุ่มที่ถูกเผ่าพันธุ์ของตนเองขับไล่ ออกเดินทางตามหาคู่ต่อสู้ที่แข็งแกร่งที่สุดในจักรวาล",
+  "tags": [
+   "sci-fi",
+   "action"
+  ],
+  "poster_class": "poster-scifi",
+  "icon": "👽",
+  "id": 8
+ },
+ {
+  "title": "Weapons",
+  "mpaa_rating": "R",
+  "genre": "Horror",
+  "year": 2025,
+  "score": 7.4,
+  "director": "Zach Cregger",
+  "writer": "Zach Cregger",
+  "star": "Julia Garner",
+  "country": "USA",
+  "synopsis": "เด็กนักเรียนทั้งห้องหายตัวไปพร้อมกันในคืนเดียว ยกเว้นเด็กคนเดียวที่รอดไว้ให้คำตอบ",
+  "tags": [
+   "horror",
+   "mystery"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🔫",
+  "id": 9
+ },
+ {
+  "title": "Opus",
+  "mpaa_rating": "R",
+  "genre": "Thriller",
+  "year": 2025,
+  "score": 6.7,
+  "director": "Mark Anthony Green",
+  "writer": "Mark Anthony Green",
+  "star": "Ayo Edebiri",
+  "country": "USA",
+  "synopsis": "นักข่าวสาวได้รับเชิญไปคฤหาสน์ลึกลับของป็อปสตาร์ในตำนานที่หายตัวไปนานหลายสิบปี",
+  "tags": [
+   "thriller",
+   "horror"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🎤",
+  "id": 10
+ },
+ {
+  "title": "Zootopia 2",
+  "mpaa_rating": "PG",
+  "genre": "Animation",
+  "year": 2025,
+  "score": 7.8,
+  "director": "Jared Bush, Byron Howard",
+  "writer": "Jared Bush",
+  "star": "Ginnifer Goodwin, Jason Bateman",
+  "country": "USA",
+  "synopsis": "จูดี้และนิคกลับมาสืบคดีใหม่ที่พาพวกเขาไปสำรวจมุมที่ไม่เคยเห็นมาก่อนของมหานครสัตว์โลก",
+  "tags": [
+   "animation",
+   "family",
+   "comedy"
+  ],
+  "poster_class": "poster-animation",
+  "icon": "🦊",
+  "id": 11
+ },
+ {
+  "title": "Snow White",
+  "mpaa_rating": "PG",
+  "genre": "Fantasy",
+  "year": 2025,
+  "score": 2.1,
+  "director": "Marc Webb",
+  "writer": "Greta Gerwig, Erin Cressida Wilson",
+  "star": "Rachel Zegler",
+  "country": "USA",
+  "synopsis": "เจ้าหญิงรวมพลังกับคนแคระทั้งเจ็ดและกลุ่มกบฏเพื่อปลดปล่อยอาณาจักรจากราชินีใจร้าย",
+  "tags": [
+   "fantasy",
+   "musical",
+   "family"
+  ],
+  "poster_class": "poster-fantasy",
+  "icon": "🍎",
+  "id": 12
+ },
+ {
+  "title": "How to Train Your Dragon",
+  "mpaa_rating": "PG",
+  "genre": "Adventure",
+  "year": 2025,
+  "score": 8.1,
+  "director": "Dean DeBlois",
+  "writer": "Dean DeBlois",
+  "star": "Mason Thames",
+  "country": "USA",
+  "synopsis": "ฉบับคนแสดงของเรื่องราวมิตรภาพระหว่างหนุ่มไวกิ้งกับมังกรที่เปลี่ยนชะตาทั้งเผ่าพันธุ์",
+  "tags": [
+   "adventure",
+   "fantasy",
+   "family"
+  ],
+  "poster_class": "poster-adventure",
+  "icon": "🐉",
+  "id": 13
+ },
+ {
+  "title": "A Minecraft Movie",
+  "mpaa_rating": "PG",
+  "genre": "Adventure",
+  "year": 2025,
+  "score": 6.0,
+  "director": "Jared Hess",
+  "writer": "Chris Bowman, Hubbel Palmer, Allison Schroeder",
+  "star": "Jack Black",
+  "country": "USA",
+  "synopsis": "กลุ่มคนแปลกหน้าถูกดูดเข้าไปในโลกบล็อกสี่เหลี่ยมที่ทุกอย่างสร้างได้ด้วยจินตนาการ",
+  "tags": [
+   "adventure",
+   "comedy",
+   "family"
+  ],
+  "poster_class": "poster-adventure",
+  "icon": "⛏️",
+  "id": 14
+ },
+ {
+  "title": "Final Destination: Bloodlines",
+  "mpaa_rating": "R",
+  "genre": "Horror",
+  "year": 2025,
+  "score": 7.0,
+  "director": "Zach Lipovsky, Adam B. Stein",
+  "writer": "Guy Busick, Lori Evans Taylor",
+  "star": "Kaitlyn Santa Juana",
+  "country": "USA",
+  "synopsis": "ฝันร้ายที่ทำนายโศกนาฏกรรมในอดีต ย้อนกลับมาไล่ล่าทายาทรุ่นต่อมาอย่างหลีกเลี่ยงไม่ได้",
+  "tags": [
+   "horror",
+   "supernatural"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "💀",
+  "id": 15
+ },
+ {
+  "title": "Thunderbolts*",
+  "mpaa_rating": "PG-13",
+  "genre": "Action",
+  "year": 2025,
+  "score": 7.1,
+  "director": "Jake Schreier",
+  "writer": "Eric Pearson, Lee Sung Jin, Joanna Calo",
+  "star": "Florence Pugh",
+  "country": "USA",
+  "synopsis": "กลุ่มตัวร้ายและสายลับที่ถูกทอดทิ้งถูกบังคับให้รวมทีมกันในภารกิจที่อาจไม่มีทางกลับ",
+  "tags": [
+   "superhero",
+   "action",
+   "marvel"
+  ],
+  "poster_class": "poster-action",
+  "icon": "⚡",
+  "id": 16
+ },
+ {
+  "title": "The Fantastic Four: First Steps",
+  "mpaa_rating": "PG-13",
+  "genre": "Sci-Fi",
+  "year": 2025,
+  "score": 7.0,
+  "director": "Matt Shakman",
+  "writer": "Eric Pearson, Josh Friedman, Jeff Kaplan, Ian Springer",
+  "star": "Pedro Pascal",
+  "country": "USA",
+  "synopsis": "ทีมฮีโร่สี่คนในยุครีโทรฟิวเจอร์ต้องปกป้องโลกจากภัยคุกคามจากอวกาศที่กลืนกินดาวเคราะห์",
+  "tags": [
+   "superhero",
+   "sci-fi",
+   "marvel"
+  ],
+  "poster_class": "poster-scifi",
+  "icon": "🚀",
+  "id": 17
+ },
+ {
+  "title": "Superman",
+  "mpaa_rating": "PG-13",
+  "genre": "Action",
+  "year": 2025,
+  "score": 7.7,
+  "director": "James Gunn",
+  "writer": "James Gunn",
+  "star": "David Corenswet",
+  "country": "USA",
+  "synopsis": "ซูเปอร์แมนต้องพิสูจน์ว่าความเป็นมนุษย์และมนุษย์ต่างดาวในตัวเขาสามารถอยู่ร่วมกันเพื่อช่วยโลกได้",
+  "tags": [
+   "superhero",
+   "action",
+   "sci-fi"
+  ],
+  "poster_class": "poster-action",
+  "icon": "🦸",
+  "id": 18
+ },
+ {
+  "title": "Jurassic World: Rebirth",
+  "mpaa_rating": "PG-13",
+  "genre": "Adventure",
+  "year": 2025,
+  "score": 5.9,
+  "director": "Gareth Edwards",
+  "writer": "David Koepp",
+  "star": "Scarlett Johansson",
+  "country": "USA",
+  "synopsis": "ทีมปฏิบัติการลับถูกส่งไปยังเกาะต้องห้ามเพื่อเก็บตัวอย่าง DNA ไดโนเสาร์สายพันธุ์ใหม่สุดอันตราย",
+  "tags": [
+   "adventure",
+   "action",
+   "sci-fi"
+  ],
+  "poster_class": "poster-adventure",
+  "icon": "🦖",
+  "id": 19
+ },
+ {
+  "title": "F1: The Movie",
+  "mpaa_rating": "PG-13",
+  "genre": "Drama",
+  "year": 2025,
+  "score": 7.6,
+  "director": "Joseph Kosinski",
+  "writer": "Ehren Kruger",
+  "star": "Brad Pitt",
+  "country": "USA",
+  "synopsis": "นักแข่งเก๋าถูกดึงกลับมาเป็นเมนเทอร์ให้นักแข่งหน้าใหม่ไฟแรงในสนามฟอร์มูลาวันระดับโลก",
+  "tags": [
+   "drama",
+   "sports",
+   "action"
+  ],
+  "poster_class": "poster-drama",
+  "icon": "🏎️",
+  "id": 20
+ },
+ {
+  "title": "Elio",
+  "mpaa_rating": "PG",
+  "genre": "Animation",
+  "year": 2025,
+  "score": 7.3,
+  "director": "Domee Shi, Madeline Sharafian",
+  "writer": "Adrian Molina, Julia Cho",
+  "star": "Yonas Kibreab",
+  "country": "USA",
+  "synopsis": "เด็กชายผู้หลงใหลมนุษย์ต่างดาวถูกเข้าใจผิดว่าเป็นทูตของโลก และถูกพาตัวไปยังสภาจักรวาล",
+  "tags": [
+   "animation",
+   "family",
+   "sci-fi"
+  ],
+  "poster_class": "poster-animation",
+  "icon": "👽",
+  "id": 21
+ },
+ {
+  "title": "Lilo & Stitch",
+  "mpaa_rating": "PG",
+  "genre": "Family",
+  "year": 2025,
+  "score": 6.9,
+  "director": "Dean Fleischer Camp",
+  "writer": "Chris Kekaniokalani Bright",
+  "star": "Maia Kealoha",
+  "country": "USA",
+  "synopsis": "ฉบับคนแสดงของมิตรภาพแปลกประหลาดระหว่างเด็กหญิงฮาวายกับเอเลี่ยนจอมป่วน",
+  "tags": [
+   "family",
+   "comedy",
+   "sci-fi"
+  ],
+  "poster_class": "poster-comedy",
+  "icon": "🌺",
+  "id": 22
+ },
+ {
+  "title": "28 Years Later",
+  "mpaa_rating": "R",
+  "genre": "Horror",
+  "year": 2025,
+  "score": 6.6,
+  "director": "Danny Boyle",
+  "writer": "Alex Garland",
+  "star": "Jodie Comer",
+  "country": "UK",
+  "synopsis": "เกือบสามทศวรรษหลังไวรัสคลั่งระบาด ชุมชนที่รอดชีวิตต้องออกไปเผชิญโลกภายนอกอีกครั้ง",
+  "tags": [
+   "horror",
+   "zombie",
+   "survival"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🧟",
+  "id": 23
+ },
+ {
+  "title": "Mission: Impossible - The Final Reckoning",
+  "mpaa_rating": "PG-13",
+  "genre": "Action",
+  "year": 2025,
+  "score": 7.1,
+  "director": "Christopher McQuarrie",
+  "writer": "Christopher McQuarrie, Erik Jendresen",
+  "star": "Tom Cruise",
+  "country": "USA",
+  "synopsis": "อีธาน ฮันท์เผชิญภารกิจอันตรายที่สุดในชีวิตเพื่อหยุดภัยคุกคามทางปัญญาประดิษฐ์ระดับโลก",
+  "tags": [
+   "action",
+   "spy",
+   "thriller"
+  ],
+  "poster_class": "poster-action",
+  "icon": "🕵️",
+  "id": 24
+ },
+ {
+  "title": "M3GAN 2.0",
+  "mpaa_rating": "PG-13",
+  "genre": "Sci-Fi",
+  "year": 2025,
+  "score": 6.2,
+  "director": "Gerard Johnstone",
+  "writer": "Akela Cooper",
+  "star": "Allison Williams",
+  "country": "USA",
+  "synopsis": "หุ่นยนต์เอไอสุดอันตรายกลับมาอีกครั้งในเวอร์ชันที่ฉลาดและคาดเดาไม่ได้กว่าเดิม",
+  "tags": [
+   "sci-fi",
+   "horror",
+   "thriller"
+  ],
+  "poster_class": "poster-scifi",
+  "icon": "🤖",
+  "id": 25
+ },
+ {
+  "title": "Materialists",
+  "mpaa_rating": "R",
+  "genre": "Romance",
+  "year": 2025,
+  "score": 7.2,
+  "director": "Celine Song",
+  "writer": "Celine Song",
+  "star": "Dakota Johnson",
+  "country": "USA",
+  "synopsis": "แม่สื่อมืออาชีพในนิวยอร์กต้องเลือกระหว่างความรักในอุดมคติกับความมั่นคงทางการเงิน",
+  "tags": [
+   "romance",
+   "drama"
+  ],
+  "poster_class": "poster-romance",
+  "icon": "💍",
+  "id": 26
+ },
+ {
+  "title": "Sinners",
+  "mpaa_rating": "R",
+  "genre": "Horror",
+  "year": 2025,
+  "score": 7.9,
+  "director": "Ryan Coogler",
+  "writer": "Ryan Coogler",
+  "star": "Michael B. Jordan",
+  "country": "USA",
+  "synopsis": "ฝาแฝดกลับบ้านเกิดเพื่อเริ่มต้นชีวิตใหม่ แต่กลับต้องเผชิญกับความชั่วร้ายที่เก่าแก่กว่าที่คิด",
+  "tags": [
+   "horror",
+   "period",
+   "thriller"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🩸",
+  "id": 27
+ },
+ {
+  "title": "Freakier Friday",
+  "mpaa_rating": "PG",
+  "genre": "Comedy",
+  "year": 2025,
+  "score": 6.4,
+  "director": "Nisha Ganatra",
+  "writer": "Jordan Weiss",
+  "star": "Lindsay Lohan",
+  "country": "USA",
+  "synopsis": "แม่ลูกสลับร่างกันอีกครั้ง คราวนี้มีสมาชิกครอบครัวรุ่นใหม่ร่วมวงความวุ่นวายด้วย",
+  "tags": [
+   "comedy",
+   "family"
+  ],
+  "poster_class": "poster-comedy",
+  "icon": "🔄",
+  "id": 28
+ },
+ {
+  "title": "The Naked Gun",
+  "mpaa_rating": "PG-13",
+  "genre": "Comedy",
+  "year": 2025,
+  "score": 6.8,
+  "director": "Akiva Schaffer",
+  "writer": "Dan Gregor, Doug Mand, Akiva Schaffer",
+  "star": "Liam Neeson",
+  "country": "USA",
+  "synopsis": "นักสืบจอมซุ่มซ่ามรุ่นใหม่สานต่อภารกิจพ่อผู้ล่วงลับในคดีสุดป่วนที่เขาต้องมาแก้ไข",
+  "tags": [
+   "comedy",
+   "action",
+   "parody"
+  ],
+  "poster_class": "poster-comedy",
+  "icon": "🔫",
+  "id": 29
+ },
+ {
+  "title": "Wicked: For Good",
+  "mpaa_rating": "PG",
+  "genre": "Fantasy",
+  "year": 2025,
+  "score": 7.8,
+  "director": "Jon M. Chu",
+  "writer": "Winnie Holzman, Dana Fox",
+  "star": "Cynthia Erivo",
+  "country": "USA",
+  "synopsis": "ภาคจบของเรื่องราวแม่มดสองคนแห่งแดนออซ เมื่อมิตรภาพต้องเผชิญบททดสอบครั้งใหญ่ที่สุด",
+  "tags": [
+   "fantasy",
+   "musical",
+   "drama"
+  ],
+  "poster_class": "poster-fantasy",
+  "icon": "🧙‍♀️",
+  "id": 30
+ },
+ {
+  "title": "Jujutsu Kaisen: Hidden Inventory / Premature Death",
+  "mpaa_rating": "PG-13",
+  "genre": "Animation",
+  "year": 2025,
+  "score": 8.4,
+  "director": "Sunghoo Park",
+  "writer": "Hiroshi Seko",
+  "star": "Yuichi Nakamura",
+  "country": "Japan",
+  "synopsis": "ย้อนเวลาสู่เรื่องราวของโกโจและเก็ตโตะในวัยหนุ่ม ก่อนเหตุการณ์ที่เปลี่ยนทุกอย่างไปตลอดกาล",
+  "tags": [
+   "animation",
+   "action",
+   "fantasy"
+  ],
+  "poster_class": "poster-fantasy",
+  "icon": "👹",
+  "id": 31
+ },
+ {
+  "title": "Ne Zha 2",
+  "mpaa_rating": "PG",
+  "genre": "Animation",
+  "year": 2025,
+  "score": 8.3,
+  "director": "Jiaozi",
+  "writer": "Jiaozi",
+  "star": "Yanting Lu",
+  "country": "China",
+  "synopsis": "เน่อจาและอ้าวปิ่งต้องร่วมมือกันอีกครั้งเพื่อฟื้นคืนร่างกายและปกป้องโลกจากพลังชั่วร้ายโบราณ",
+  "tags": [
+   "animation",
+   "fantasy",
+   "action"
+  ],
+  "poster_class": "poster-fantasy",
+  "icon": "🔥",
+  "id": 32
+ },
+ {
+  "title": "Wake Up Dead Man: A Knives Out Mystery",
+  "mpaa_rating": "PG-13",
+  "genre": "Mystery",
+  "year": 2025,
+  "score": 7.8,
+  "director": "Rian Johnson",
+  "writer": "Rian Johnson",
+  "star": "Daniel Craig",
+  "country": "USA",
+  "synopsis": "นักสืบเบอนัวต์ บล็องก์ สืบสวนคดีฆาตกรรมปริศนาในโบสถ์เล็ก ๆ ที่เต็มไปด้วยความลับ",
+  "tags": [
+   "mystery",
+   "crime",
+   "thriller"
+  ],
+  "poster_class": "poster-crime",
+  "icon": "🔍",
+  "id": 33
+ },
+ {
+  "title": "Avengers: Doomsday",
+  "mpaa_rating": "PG-13",
+  "genre": "Action",
+  "year": 2026,
+  "score": 8.2,
+  "director": "Anthony Russo, Joe Russo",
+  "writer": "Stephen McFeely",
+  "star": "Robert Downey Jr.",
+  "country": "USA",
+  "synopsis": "เหล่าฮีโร่จากหลายจักรวาลต้องรวมพลังครั้งใหญ่ที่สุดเพื่อหยุดยั้งด็อกเตอร์ดูมก่อนทุกอย่างจะสายเกินไป",
+  "tags": [
+   "superhero",
+   "action",
+   "marvel"
+  ],
+  "poster_class": "poster-action",
+  "icon": "🦸",
+  "id": 34
+ },
+ {
+  "title": "Spider-Man: Brand New Day",
+  "mpaa_rating": "PG-13",
+  "genre": "Action",
+  "year": 2026,
+  "score": 7.8,
+  "director": "Destin Daniel Cretton",
+  "writer": "Chris McKenna, Erik Sommers",
+  "star": "Tom Holland",
+  "country": "USA",
+  "synopsis": "ปีเตอร์ ปาร์คเกอร์พยายามใช้ชีวิตนักศึกษาธรรมดาไปพร้อมกับหน้าที่ฮีโร่ประจำย่านนิวยอร์ก",
+  "tags": [
+   "superhero",
+   "action",
+   "marvel"
+  ],
+  "poster_class": "poster-action",
+  "icon": "🕷️",
+  "id": 35
+ },
+ {
+  "title": "Toy Story 5",
+  "mpaa_rating": "G",
+  "genre": "Animation",
+  "year": 2026,
+  "score": 7.5,
+  "director": "Andrew Stanton",
+  "writer": "Andrew Stanton",
+  "star": "Tom Hanks, Tim Allen",
+  "country": "USA",
+  "synopsis": "วู้ดดี้และเหล่าของเล่นต้องเผชิญคู่แข่งใหม่ นั่นคืออุปกรณ์ดิจิทัลที่กำลังแย่งความสนใจจากเด็ก ๆ",
+  "tags": [
+   "animation",
+   "family",
+   "comedy"
+  ],
+  "poster_class": "poster-animation",
+  "icon": "🤠",
+  "id": 36
+ },
+ {
+  "title": "The Odyssey",
+  "mpaa_rating": "PG-13",
+  "genre": "Adventure",
+  "year": 2026,
+  "score": 8.4,
+  "director": "Christopher Nolan",
+  "writer": "Christopher Nolan",
+  "star": "Matt Damon",
+  "country": "USA",
+  "synopsis": "การตีความมหากาพย์กรีกโบราณของโฮเมอร์ ว่าด้วยการเดินทางกลับบ้านอันยาวนานของวีรบุรุษโอดิสเซียส",
+  "tags": [
+   "adventure",
+   "drama",
+   "epic"
+  ],
+  "poster_class": "poster-adventure",
+  "icon": "⚓",
+  "id": 37
+ },
+ {
+  "title": "Supergirl",
+  "mpaa_rating": "PG-13",
+  "genre": "Action",
+  "year": 2026,
+  "score": 7.2,
+  "director": "Craig Gillespie",
+  "writer": "Ana Nogueira",
+  "star": "Milly Alcock",
+  "country": "USA",
+  "synopsis": "ลูกพี่ลูกน้องของซูเปอร์แมนออกเดินทางผจญภัยในอวกาศเพื่อค้นหาตัวตนและพลังของตัวเอง",
+  "tags": [
+   "superhero",
+   "action",
+   "sci-fi"
+  ],
+  "poster_class": "poster-action",
+  "icon": "🦸‍♀️",
+  "id": 38
+ },
+ {
+  "title": "Dune: Part Three",
+  "mpaa_rating": "PG-13",
+  "genre": "Sci-Fi",
+  "year": 2026,
+  "score": 8.6,
+  "director": "Denis Villeneuve",
+  "writer": "Denis Villeneuve, Jon Spaihts",
+  "star": "Timothée Chalamet",
+  "country": "USA",
+  "synopsis": "พอล อาทรีดีสต้องเผชิญผลลัพธ์จากสงครามศักดิ์สิทธิ์ที่เขาเป็นผู้จุดชนวนขึ้นเองบนดาวทะเลทราย",
+  "tags": [
+   "sci-fi",
+   "drama",
+   "epic"
+  ],
+  "poster_class": "poster-scifi",
+  "icon": "🏜️",
+  "id": 39
+ },
+ {
+  "title": "The Mandalorian & Grogu",
+  "mpaa_rating": "PG-13",
+  "genre": "Adventure",
+  "year": 2026,
+  "score": 7.6,
+  "director": "Jon Favreau",
+  "writer": "Jon Favreau, Dave Filoni",
+  "star": "Pedro Pascal",
+  "country": "USA",
+  "synopsis": "ดิน จาริน และโกรกูออกเดินทางครั้งใหม่สู่ดาวที่ไม่เคยสำรวจมาก่อนในกาแล็กซีอันไกลโพ้น",
+  "tags": [
+   "adventure",
+   "sci-fi",
+   "family"
+  ],
+  "poster_class": "poster-adventure",
+  "icon": "🪐",
+  "id": 40
+ },
+ {
+  "title": "The Hunger Games: Sunrise on the Reaping",
+  "mpaa_rating": "PG-13",
+  "genre": "Drama",
+  "year": 2026,
+  "score": 7.5,
+  "director": "Francis Lawrence",
+  "writer": "Michael Arndt",
+  "star": "Joseph Zada",
+  "country": "USA",
+  "synopsis": "ย้อนเวลากลับไปยังเกมล่าชีวิตครั้งที่ 50 ที่หล่อหลอมให้เฮย์มิทช์ แอบเบอร์นาธีกลายเป็นคนที่เขาเป็น",
+  "tags": [
+   "drama",
+   "action",
+   "sci-fi"
+  ],
+  "poster_class": "poster-drama",
+  "icon": "🏹",
+  "id": 41
+ },
+ {
+  "title": "Narnia",
+  "mpaa_rating": "PG",
+  "genre": "Fantasy",
+  "year": 2026,
+  "score": 7.4,
+  "director": "Greta Gerwig",
+  "writer": "Greta Gerwig",
+  "star": "Meryl Streep",
+  "country": "USA",
+  "synopsis": "เด็ก ๆ สี่คนเปิดประตูตู้เสื้อผ้าเข้าสู่ดินแดนมหัศจรรย์ที่ถูกแช่แข็งด้วยคำสาปฤดูหนาวนิรันดร์",
+  "tags": [
+   "fantasy",
+   "family",
+   "adventure"
+  ],
+  "poster_class": "poster-fantasy",
+  "icon": "🦁",
+  "id": 42
+ },
+ {
+  "title": "Moana",
+  "mpaa_rating": "PG",
+  "genre": "Adventure",
+  "year": 2026,
+  "score": 6.9,
+  "director": "Thomas Kail",
+  "writer": "Jared Bush, Dana Ledoux Miller",
+  "star": "Catherine Laga'aia",
+  "country": "USA",
+  "synopsis": "ฉบับคนแสดงของการเดินทางข้ามมหาสมุทรของเจ้าหญิงผู้กล้าหาญเพื่อช่วยเกาะบ้านเกิดของเธอ",
+  "tags": [
+   "adventure",
+   "musical",
+   "family"
+  ],
+  "poster_class": "poster-adventure",
+  "icon": "🌊",
+  "id": 43
+ },
+ {
+  "title": "Street Fighter",
+  "mpaa_rating": "PG-13",
+  "genre": "Action",
+  "year": 2026,
+  "score": 6.3,
+  "director": "Kitao Sakurai",
+  "writer": "Kitao Sakurai",
+  "star": "Andrew Koji",
+  "country": "USA",
+  "synopsis": "นักสู้จากทั่วโลกรวมตัวกันในศึกประลองยุทธ์ระดับตำนานเพื่อชิงตำแหน่งนักสู้ที่แข็งแกร่งที่สุด",
+  "tags": [
+   "action",
+   "martial-arts"
+  ],
+  "poster_class": "poster-action",
+  "icon": "👊",
+  "id": 44
+ },
+ {
+  "title": "Clayface",
+  "mpaa_rating": "R",
+  "genre": "Horror",
+  "year": 2026,
+  "score": 6.8,
+  "director": "James Watkins",
+  "writer": "Mike Flanagan",
+  "star": "Tom Rhys Harries",
+  "country": "USA",
+  "synopsis": "นักแสดงที่ตกอับยอมรับการทดลองลึกลับเพื่อกลับไปสู่จุดสูงสุดอีกครั้ง แต่ต้องแลกด้วยร่างกายของตัวเอง",
+  "tags": [
+   "horror",
+   "superhero",
+   "thriller"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🎭",
+  "id": 45
+ },
+ {
+  "title": "The Mummy",
+  "mpaa_rating": "PG-13",
+  "genre": "Horror",
+  "year": 2026,
+  "score": 6.5,
+  "director": "Lee Cronin",
+  "writer": "Lee Cronin",
+  "star": "Jack O'Connell",
+  "country": "USA",
+  "synopsis": "การปลุกคำสาปโบราณขึ้นมาใหม่ในธีมสยองขวัญที่เข้มข้นกว่าฉบับที่ผู้ชมเคยรู้จัก",
+  "tags": [
+   "horror",
+   "supernatural",
+   "adventure"
+  ],
+  "poster_class": "poster-horror",
+  "icon": "🪦",
+  "id": 46
+ },
+ {
+  "title": "Scary Movie",
+  "mpaa_rating": "R",
+  "genre": "Comedy",
+  "year": 2026,
+  "score": 6.2,
+  "director": "Marlon Wayans, Shawn Wayans",
+  "writer": "Marlon Wayans, Shawn Wayans, Keenen Ivory Wayans",
+  "star": "Anna Faris",
+  "country": "USA",
+  "synopsis": "แฟรนไชส์ล้อเลียนหนังสยองขวัญชื่อดังกลับมาอีกครั้งพร้อมมุกใหม่และนักแสดงรุ่นใหม่",
+  "tags": [
+   "comedy",
+   "parody",
+   "horror"
+  ],
+  "poster_class": "poster-comedy",
+  "icon": "🎃",
+  "id": 47
+ },
+ {
+  "title": "Project Hail Mary",
+  "mpaa_rating": "PG-13",
+  "genre": "Sci-Fi",
+  "year": 2026,
+  "score": 8.1,
+  "director": "Phil Lord, Christopher Miller",
+  "writer": "Drew Goddard",
+  "star": "Ryan Gosling",
+  "country": "USA",
+  "synopsis": "นักบินอวกาศตื่นขึ้นมาบนยานโดยจำอะไรไม่ได้ และพบว่าตัวเองคือความหวังสุดท้ายของมนุษยชาติ",
+  "tags": [
+   "sci-fi",
+   "adventure",
+   "drama"
+  ],
+  "poster_class": "poster-scifi",
+  "icon": "🚀",
+  "id": 48
+ },
+ {
+  "title": "Shrek 5",
+  "mpaa_rating": "PG",
+  "genre": "Animation",
+  "year": 2026,
+  "score": 7.6,
+  "director": "Walt Dohrn, Brad Ableson",
+  "writer": "Michael McCullers",
+  "star": "Mike Myers, Eddie Murphy, Cameron Diaz",
+  "country": "USA",
+  "synopsis": "ยักษ์เขียวสุดกวนและผองเพื่อนกลับมาผจญภัยครั้งใหม่ พร้อมปัญหาที่ใหญ่กว่าที่เคยเจอในหนองบึง",
+  "tags": [
+   "animation",
+   "comedy",
+   "family"
+  ],
+  "poster_class": "poster-comedy",
+  "icon": "🐸",
+  "id": 49
+ },
+ {
+  "title": "Masters of the Universe",
+  "mpaa_rating": "PG-13",
+  "genre": "Fantasy",
+  "year": 2026,
+  "score": 6.5,
+  "director": "Travis Knight",
+  "writer": "Chris Butler",
+  "star": "Nicholas Galitzine",
+  "country": "USA",
+  "synopsis": "เจ้าชายผู้ถูกเนรเทศค้นพบดาบพลังวิเศษและกลายเป็นฮี-แมน วีรบุรุษแห่งดาวอีเทอร์เนีย",
+  "tags": [
+   "fantasy",
+   "action",
+   "adventure"
+  ],
+  "poster_class": "poster-fantasy",
+  "icon": "⚔️",
+  "id": 50
+ }
+]

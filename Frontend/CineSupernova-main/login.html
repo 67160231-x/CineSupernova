@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>เข้าสู่ระบบ / สมัครสมาชิก - CineSupernova</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/favicon-180.png">
   <link rel="stylesheet" href="style.css">
   <style>
     body.auth-page {
@@ -115,13 +117,48 @@
     .hidden {
       display: none !important;
     }
+    .link-btn {
+      background: none;
+      border: none;
+      color: #ffa98c;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 4px 0;
+      text-decoration: underline;
+      font-family: inherit;
+    }
+    .link-btn:hover { color: #ffc857; }
+    .link-btn.center { display: block; margin: 14px auto 0; }
+    .forgot-row { text-align: right; margin: -6px 0 4px; }
+    .forgot-title { font-weight: 700; font-size: 1.05rem; margin: 0 0 6px; color: #ffc857; text-align: center; }
+    .forgot-desc { color: #a09cb0; font-size: 0.85rem; line-height: 1.6; margin: 0 0 16px; text-align: center; }
+    .success-msg {
+      color: #7ee8c0;
+      font-size: 0.85rem;
+      text-align: center;
+      margin: 8px 0;
+      min-height: 20px;
+      line-height: 1.6;
+    }
+    .demo-box {
+      margin: 8px 0 4px;
+      padding: 10px 12px;
+      border: 1px dashed rgba(255, 200, 87, 0.5);
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: #ffc857;
+      text-align: center;
+      word-break: break-all;
+    }
+    .demo-box a { color: #7ee8c0; font-weight: 700; }
+    .btn-submit:disabled { opacity: 0.55; cursor: not-allowed; }
   </style>
 </head>
 <body class="auth-page">
 
   <div class="auth-card">
     <div class="brand-header">
-      <span style="font-size: 3rem;">🎬</span>
+      <img class="auth-logo" src="assets/logo.png" alt="CineSupernova logo">
       <h1>CINESUPERNOVA</h1>
       <p>ยินดีต้อนรับสู่คอมมูนิตี้คนรักหนัง</p>
     </div>
@@ -142,8 +179,25 @@
         <label>รหัสผ่าน (Password)</label>
         <input type="password" id="pagePassword" placeholder="กรอกรหัสผ่าน" required>
       </div>
+      <div class="forgot-row">
+        <button type="button" id="forgotLink" class="link-btn">ลืมรหัสผ่าน?</button>
+      </div>
       <p id="pageLoginError" class="error-msg"></p>
       <button type="submit" class="btn-submit">เข้าสู่ระบบ</button>
+    </form>
+
+    <!-- ฟอร์ม ลืมรหัสผ่าน (ซ่อนไว้ จนกว่าจะกด "ลืมรหัสผ่าน?") -->
+    <form id="pageForgotForm" class="hidden" novalidate>
+      <p class="forgot-title">ลืมรหัสผ่าน?</p>
+      <p class="forgot-desc">กรอกอีเมลที่ใช้สมัครสมาชิก เราจะส่งลิงก์สำหรับตั้งรหัสผ่านใหม่ไปให้ (ลิงก์ใช้ได้ 30 นาที)</p>
+      <div class="form-group">
+        <label>อีเมล (Email)</label>
+        <input type="email" id="pageForgotEmail" placeholder="example@email.com" required>
+      </div>
+      <p id="pageForgotMsg" class="error-msg"></p>
+      <div id="pageForgotDemo" class="demo-box hidden"></div>
+      <button type="submit" id="pageForgotBtn" class="btn-submit">ส่งลิงก์รีเซ็ตรหัสผ่าน</button>
+      <button type="button" id="forgotBack" class="link-btn center">← กลับไปเข้าสู่ระบบ</button>
     </form>
 
     <!-- ฟอร์ม สมัครสมาชิก -->

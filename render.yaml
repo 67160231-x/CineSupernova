@@ -15,3 +15,13 @@ services:
         value: 3000
       - key: JWT_SECRET
         sync: false        # ไปตั้งค่าจริงเองใน Render Dashboard > Environment
+      - key: APP_BASE_URL
+        sync: false        # เช่น https://cinesupernova.vercel.app (ไม่ตั้งก็ได้ถ้าเปิดเว็บผ่านโดเมน Render โดยตรง)
+      - key: BREVO_API_KEY
+        sync: false        # ระบบลืมรหัสผ่าน: ส่งอีเมลผ่าน Brevo
+      - key: MAIL_FROM_EMAIL
+        sync: false        # อีเมลผู้ส่งที่ยืนยันใน Brevo แล้ว
+      - key: MAIL_FROM_NAME
+        value: CineSupernova
+      - key: PASSWORD_RESET_DEMO
+        value: "false"     # true = โชว์ลิงก์รีเซ็ตบนหน้าเว็บ (โหมดสาธิต) ห้ามเปิดบนเว็บจริง
