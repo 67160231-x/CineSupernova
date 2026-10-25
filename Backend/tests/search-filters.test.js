@@ -27,7 +27,7 @@ test('หลาย Vibe = หรือ / ข้ามกลุ่มตัวก
   const both = SF.applyFilters(movies, { vibes: ['ปิดไฟดูคนเดียวเท่านั้น', 'ฮาจนสำลักป๊อปคอร์น'] }).length;
   assert.ok(both >= Math.max(a, b) && both <= a + b);
   const narrowed = SF.applyFilters(movies, { vibes: ['ปิดไฟดูคนเดียวเท่านั้น'], genres: ['Horror'], yearFrom: 2026 });
-  assert.ok(narrowed.every((m) => m.genre === 'Horror' && m.year === 2026));
+  assert.ok(narrowed.every((m) => SF.movieGenres(m).includes('Horror') && m.year === 2026));
 });
 
 test('แท็กภาษาไทยในข้อมูลจริง (ถ้าเพิ่มในอนาคต) ก็ยังตรง', () => {
@@ -37,7 +37,9 @@ test('แท็กภาษาไทยในข้อมูลจริง (ถ
 
 test('ประเภทหนัง: สร้างตัวเลือกจากข้อมูลจริง + ชื่อไทยครบ (รัก ดราม่า อนิเมะ)', () => {
   const { genres, years } = SF.buildFacets(movies);
-  assert.equal(genres.reduce((s, g) => s + g.count, 0), 50);
+  // หนังหนึ่งเรื่องนับได้หลายประเภท (genre หลัก + แท็กที่เป็นชื่อประเภท) ผลรวมจึงมากกว่าจำนวนหนัง
+  assert.ok(genres.reduce((s, g) => s + g.count, 0) >= 50);
+  for (const g of genres) assert.equal(SF.applyFilters(movies, { genres: [g.value] }).length, g.count, `จำนวนบนปุ่ม ${g.value} ต้องตรงกับผลกรอง`);
   const label = Object.fromEntries(genres.map((g) => [g.value, g.label]));
   assert.match(label.Romance, /รัก/);
   assert.match(label.Drama, /ดราม่า/);
@@ -94,4 +96,15 @@ test('hasActiveFilters บอกว่ามีตัวกรองทำงา
   assert.equal(SF.hasActiveFilters({ vibes: new Set(['ตับพัง 3 วัน']) }), true);
   assert.equal(SF.hasActiveFilters({ minScore: '7' }), true);
   assert.equal(SF.hasActiveFilters({ q: 'x' }), true);
+});
+
+test('กรองประเภท "ครอบครัว" ต้องเจอหนังที่ติดแท็ก family ด้วย ไม่ใช่แค่ genre หลัก (บั๊กเดิม: เจอแค่ 1 เรื่อง)', () => {
+  const tagged = movies.filter((m) => m.genre === 'Family' || (m.tags || []).includes('family'));
+  assert.ok(tagged.length > 1, 'ข้อมูลตั้งต้นต้องมีหนังติดแท็ก family หลายเรื่อง');
+  const result = SF.applyFilters(movies, { genres: ['Family'] });
+  assert.equal(result.length, tagged.length);
+  const facet = SF.buildFacets(movies).genres.find((g) => g.value === 'Family');
+  assert.equal(facet.count, tagged.length);
+  // แท็ก sci-fi / ภาษาไทย ก็นับเป็นประเภทได้
+  assert.deepEqual(SF.movieGenres({ genre: 'Action', tags: ['sci-fi', 'ครอบครัว', 'marvel'] }).sort(), ['Action', 'Family', 'Sci-Fi']);
 });

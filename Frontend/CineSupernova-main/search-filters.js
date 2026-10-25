@@ -56,6 +56,38 @@
   const genreLabel = (g) => GENRE_LABELS[g] || g;
   const movieTags = (m) => (Array.isArray(m.tags) ? m.tags : []);
 
+  // แท็กที่มีความหมายเป็น "ประเภทหนัง" -> ชื่อประเภทมาตรฐาน
+  // (หนังหนึ่งเรื่องมี genre หลักได้แค่ 1 ค่า แต่หลายเรื่องเป็นได้หลายประเภท เช่น Animation ที่เป็น family ด้วย
+  //  เลยนับแท็กพวกนี้เป็นประเภทของหนังด้วย ตอนกรอง "ครอบครัว" จะได้เจอครบทุกเรื่องที่ติดแท็ก family)
+  const TAG_TO_GENRE = Object.fromEntries(Object.keys(GENRE_LABELS).map((g) => [g.toLowerCase(), g]));
+  Object.assign(TAG_TO_GENRE, {
+    scifi: 'Sci-Fi',
+    'science fiction': 'Sci-Fi',
+    sports: 'Sport',
+    romantic: 'Romance',
+    animated: 'Animation',
+    anime: 'Animation',
+    biopic: 'Biography',
+    historical: 'History',
+    'สยองขวัญ': 'Horror',
+    'ครอบครัว': 'Family',
+    'โรแมนติก': 'Romance',
+    'คอมเมดี้': 'Comedy',
+    'แอ็กชัน': 'Action',
+    'ดราม่า': 'Drama'
+  });
+
+  /** ประเภททั้งหมดของหนังเรื่องนี้ = genre หลัก + แท็กที่เป็นชื่อประเภท (ไม่ซ้ำกัน) */
+  function movieGenres(m) {
+    const out = new Set();
+    if (m.genre) out.add(TAG_TO_GENRE[lower(m.genre)] || m.genre);
+    movieTags(m).forEach((t) => {
+      const g = TAG_TO_GENRE[lower(t).trim()];
+      if (g) out.add(g);
+    });
+    return [...out];
+  }
+
   function matchesVibe(movie, vibe) {
     const tags = movieTags(movie).map(lower);
     if (tags.includes(lower(vibe))) return true; // เผื่ออนาคตมีแท็กภาษาไทยในข้อมูลจริง
@@ -81,7 +113,7 @@
     const counts = new Map();
     const years = new Set();
     movies.forEach((m) => {
-      if (m.genre) counts.set(m.genre, (counts.get(m.genre) || 0) + 1);
+      movieGenres(m).forEach((g) => counts.set(g, (counts.get(g) || 0) + 1));
       if (Number.isFinite(Number(m.year))) years.add(Number(m.year));
     });
     const genres = [...counts.entries()]
@@ -112,7 +144,7 @@
         if (!words.every((w) => text.includes(w))) return false;
       }
       if (vibes.length && !vibes.some((v) => matchesVibe(m, v))) return false;
-      if (genres.size && !genres.has(lower(m.genre))) return false;
+      if (genres.size && !movieGenres(m).some((g) => genres.has(lower(g)))) return false;
       const y = toNum(m.year);
       if (from !== null && (y === null || y < from)) return false;
       if (to !== null && (y === null || y > to)) return false;
@@ -141,5 +173,5 @@
     );
   }
 
-  return { GENRE_LABELS, VIBES, SORTS, genreLabel, matchesVibe, buildFacets, applyFilters, hasActiveFilters };
+  return { GENRE_LABELS, VIBES, SORTS, genreLabel, movieGenres, matchesVibe, buildFacets, applyFilters, hasActiveFilters };
 }));
