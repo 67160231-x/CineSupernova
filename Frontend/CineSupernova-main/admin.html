@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — CineSupernova</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/favicon-180.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+<div class="glow-field"></div>
+
+<!-- ===================== เข้าสู่ระบบ Admin ===================== -->
+<section id="adminLogin" class="am-login hidden">
+  <form id="adminLoginForm" class="am-login-card" autocomplete="on">
+    <div class="am-login-brand">
+      <img class="am-logo" src="assets/logo-128.png" alt="CineSupernova">
+      <div>
+        <div class="am-brand-name">CineSupernova</div>
+        <span class="am-chip">ADMIN</span>
+      </div>
+    </div>
+    <p class="am-login-sub">เข้าสู่ระบบผู้ดูแล — ใช้ชื่อผู้ใช้/รหัสผ่านที่ตั้งไว้ใน Environment ของ server (ADMIN_USERNAME / ADMIN_PASSWORD)</p>
+    <label class="am-field">
+      <span>ชื่อผู้ใช้ Admin</span>
+      <input id="adminUser" name="username" autocomplete="username" value="admin" required>
+    </label>
+    <label class="am-field">
+      <span>รหัสผ่าน Admin</span>
+      <input id="adminPass" name="password" type="password" autocomplete="current-password" required>
+    </label>
+    <p id="adminLoginError" class="am-error" role="alert"></p>
+    <button type="submit" class="btn btn-primary btn-block">เข้าสู่ระบบ</button>
+    <a href="index.html" class="am-back">← กลับไปหน้าเว็บ</a>
+  </form>
+</section>
+
+<!-- ===================== แดชบอร์ด ===================== -->
+<div id="adminApp" class="hidden">
+  <header class="am-top">
+    <div class="wrap am-top-inner">
+      <a href="#overview" class="am-top-brand"><img class="brand-logo" src="assets/logo-128.png" alt=""> CineSupernova <span class="am-chip">ADMIN</span></a>
+      <nav class="am-tabs" aria-label="เมนูผู้ดูแล">
+        <a href="#overview" data-tab="overview">📊 ภาพรวม</a>
+        <a href="#movies" data-tab="movies">🎬 หนัง &amp; รูป</a>
+        <a href="#users" data-tab="users">👥 ผู้ใช้</a>
+        <a href="#reviews" data-tab="reviews">💬 รีวิว</a>
+        <a href="#system" data-tab="system">⚙️ ตั้งค่าระบบ</a>
+      </nav>
+      <div class="am-top-right">
+        <a href="index.html" target="_blank" rel="noopener" class="am-link">เปิดหน้าเว็บ ↗</a>
+        <button type="button" id="adminLogoutBtn" class="btn btn-ghost btn-sm">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap am-main">
+
+    <!-- ---------- ภาพรวม ---------- -->
+    <section data-panel="overview" class="am-panel">
+      <div class="am-head">
+        <h1>ภาพรวมระบบ</h1>
+        <p id="overviewHello" class="am-sub"></p>
+      </div>
+      <div id="statCards" class="am-stats"></div>
+
+      <div id="posterProgress" class="am-card am-progress-card"></div>
+
+      <div class="am-two-col">
+        <div class="am-card">
+          <div class="am-card-head"><h2>💬 รีวิวล่าสุด</h2><a href="#reviews" class="am-link">ดูทั้งหมด →</a></div>
+          <div id="recentReviews" class="am-mini-list"></div>
+        </div>
+        <div class="am-card">
+          <div class="am-card-head"><h2>👋 สมาชิกใหม่</h2><a href="#users" class="am-link">ดูทั้งหมด →</a></div>
+          <div id="recentUsers" class="am-mini-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- หนัง & รูป ---------- -->
+    <section data-panel="movies" class="am-panel hidden">
+      <div class="am-head am-head-row">
+        <div>
+          <h1>หนัง &amp; รูปโปสเตอร์</h1>
+          <p class="am-sub">คลิกที่กรอบรูป หรือ <strong>ลากไฟล์รูปมาวางบนการ์ด</strong> เพื่ออัปโหลดได้ทันที · กด ✏️ เพื่อแก้ข้อมูลหนัง</p>
+        </div>
+        <div class="am-head-actions">
+          <button type="button" id="autoPosterBtn" class="btn btn-ghost btn-sm hidden">✨ เติมรูปอัตโนมัติ (TMDB)</button>
+          <button type="button" id="newMovieBtn" class="btn btn-primary btn-sm">＋ เพิ่มหนังใหม่</button>
+        </div>
+      </div>
+
+      <div class="am-toolbar">
+        <input type="search" id="movieSearch" class="am-input am-grow" placeholder="ค้นหาชื่อเรื่อง / ผู้กำกับ / นักแสดง / แนว หรือ #id">
+        <select id="moviePosterFilter" class="am-input" aria-label="กรองตามรูป">
+          <option value="">ทุกเรื่อง</option>
+          <option value="missing">ยังไม่มีรูป</option>
+          <option value="has">มีรูปแล้ว</option>
+        </select>
+      </div>
+      <div id="movieSummary" class="am-summary"></div>
+      <div id="movieGrid" class="am-movie-grid"></div>
+      <div id="moviePager" class="am-pager"></div>
+    </section>
+
+    <!-- ---------- ผู้ใช้ ---------- -->
+    <section data-panel="users" class="am-panel hidden">
+      <div class="am-head">
+        <h1>ผู้ใช้งาน</h1>
+        <p class="am-sub">ส่งลิงก์รีเซ็ตรหัสผ่านให้ผู้ใช้ที่ลืมรหัส · บังคับออกจากระบบ · ลบบัญชี</p>
+      </div>
+      <div class="am-toolbar">
+        <input type="search" id="userSearch" class="am-input am-grow" placeholder="ค้นหาชื่อผู้ใช้หรืออีเมล">
+      </div>
+      <div class="am-card am-table-card">
+        <table class="am-table">
+          <thead>
+            <tr><th>#</th><th>ชื่อผู้ใช้</th><th>อีเมล</th><th>รีวิว</th><th>สมัครเมื่อ</th><th class="am-right">จัดการ</th></tr>
+          </thead>
+          <tbody id="userRows"></tbody>
+        </table>
+      </div>
+      <div id="userPager" class="am-pager"></div>
+    </section>
+
+    <!-- ---------- รีวิว ---------- -->
+    <section data-panel="reviews" class="am-panel hidden">
+      <div class="am-head">
+        <h1>รีวิว</h1>
+        <p class="am-sub">ตรวจและลบรีวิวที่ไม่เหมาะสม (สแปม คำหยาบ สปอยล์ไม่เตือน)</p>
+      </div>
+      <div class="am-toolbar">
+        <input type="search" id="reviewSearch" class="am-input am-grow" placeholder="ค้นหาจากชื่อผู้เขียนหรือข้อความรีวิว">
+      </div>
+      <div id="reviewList" class="am-review-list"></div>
+      <div id="reviewPager" class="am-pager"></div>
+    </section>
+
+    <!-- ---------- ตั้งค่าระบบ ---------- -->
+    <section data-panel="system" class="am-panel hidden">
+      <div class="am-head am-head-row">
+        <div>
+          <h1>ตั้งค่าระบบ</h1>
+          <p class="am-sub">เช็คว่าตั้งค่า Environment บน Render และฐานข้อมูลครบหรือยัง</p>
+        </div>
+        <button type="button" id="refreshStatusBtn" class="btn btn-ghost btn-sm">↻ ตรวจใหม่</button>
+      </div>
+      <div id="systemChecks" class="am-card am-checks"></div>
+
+      <div class="am-card">
+        <div class="am-card-head"><h2>📧 ทดสอบส่งอีเมล</h2></div>
+        <p class="am-sub" style="margin-top:0;">ส่งเมลทดสอบเพื่อเช็คว่าระบบส่งลิงก์รีเซ็ตรหัสผ่านใช้งานได้จริง</p>
+        <form id="testEmailForm" class="am-toolbar" style="margin:0;">
+          <input type="email" id="testEmailTo" class="am-input am-grow" placeholder="อีเมลที่จะรับเมลทดสอบ" required>
+          <button type="submit" class="btn btn-primary btn-sm">ส่งเมลทดสอบ</button>
+        </form>
+        <p id="testEmailResult" class="am-sub" role="status" style="margin:12px 0 0;"></p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ===================== หน้าต่างแก้ไขหนัง ===================== -->
+<div id="movieModal" class="am-modal hidden" role="dialog" aria-modal="true" aria-labelledby="movieModalTitle">
+  <div class="am-modal-card am-modal-wide">
+    <button type="button" class="am-modal-x" data-close aria-label="ปิด">×</button>
+    <h2 id="movieModalTitle">แก้ไขหนัง</h2>
+    <div class="am-editor">
+      <!-- รูปโปสเตอร์ -->
+      <div class="am-editor-poster">
+        <div id="editorPoster" class="am-poster am-poster-lg" tabindex="0" role="button" aria-label="อัปโหลดรูปโปสเตอร์">
+          <div class="am-poster-empty"><span class="am-poster-icon">🎬</span><span>ยังไม่มีรูป</span></div>
+          <div class="am-drop-hint">วางรูปตรงนี้</div>
+        </div>
+        <p class="am-hint">ลากไฟล์มาวาง · คลิกเพื่อเลือกไฟล์ · หรือกด <kbd>Ctrl</kbd>+<kbd>V</kbd> วางรูปที่ก๊อปมา<br>ระบบจะย่อรูปให้อัตโนมัติ (สูงสุด 600×900)</p>
+        <div class="am-poster-actions">
+          <button type="button" id="editorPickBtn" class="btn btn-ghost btn-sm">📁 เลือกไฟล์</button>
+          <button type="button" id="editorRemovePosterBtn" class="btn btn-ghost btn-sm am-danger-text">ลบรูป</button>
+        </div>
+        <div class="am-url-row">
+          <input type="url" id="editorPosterUrl" class="am-input am-grow" placeholder="หรือวางลิงก์รูป https://...">
+          <button type="button" id="editorUseUrlBtn" class="btn btn-ghost btn-sm">ใช้ลิงก์</button>
+        </div>
+        <div id="tmdbBox" class="am-tmdb hidden">
+          <button type="button" id="tmdbSearchBtn" class="btn btn-ghost btn-sm btn-block">🔎 ค้นหาโปสเตอร์จาก TMDB</button>
+          <div id="tmdbResults" class="am-tmdb-results"></div>
+          <p class="am-hint am-tmdb-credit">This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+        </div>
+      </div>
+
+      <!-- ข้อมูลหนัง -->
+      <form id="movieForm" class="am-editor-form" novalidate>
+        <label class="am-field am-span-2"><span>ชื่อเรื่อง *</span><input name="title" required maxlength="300"></label>
+        <label class="am-field"><span>แนวหนัง</span><input name="genre" list="genreList" maxlength="60"></label>
+        <label class="am-field"><span>ปีที่ฉาย</span><input name="year" type="number" min="1870" max="2100"></label>
+        <label class="am-field"><span>คะแนน (0–10)</span><input name="score" type="number" step="0.1" min="0" max="10"></label>
+        <label class="am-field"><span>ความยาว (นาที)</span><input name="runtime" type="number" min="0" max="1000"></label>
+        <label class="am-field"><span>เรต (เช่น PG-13, R)</span><input name="mpaaRating" maxlength="20"></label>
+        <label class="am-field"><span>จำนวนโหวต</span><input name="votes" type="number" min="0"></label>
+        <label class="am-field"><span>ผู้กำกับ</span><input name="director" maxlength="200"></label>
+        <label class="am-field"><span>นักแสดงนำ</span><input name="star" maxlength="200"></label>
+        <label class="am-field"><span>ผู้เขียนบท</span><input name="writer" maxlength="300"></label>
+        <label class="am-field"><span>ประเทศ</span><input name="country" maxlength="100"></label>
+        <label class="am-field"><span>บริษัท</span><input name="company" maxlength="200"></label>
+        <label class="am-field"><span>ไอคอน (อีโมจิ)</span><input name="icon" maxlength="16" placeholder="🎬"></label>
+        <label class="am-field"><span>ทุนสร้าง (USD)</span><input name="budget" type="number" min="0"></label>
+        <label class="am-field"><span>รายได้ (USD)</span><input name="gross" type="number" min="0"></label>
+        <label class="am-field am-span-2"><span>โทนสีการ์ด (ใช้ตอนยังไม่มีรูป)</span>
+          <select name="posterClass">
+            <option value="poster-drama">Drama — ม่วงแดง</option>
+            <option value="poster-scifi">Sci-Fi — น้ำเงินเขียว</option>
+            <option value="poster-romance">Romance — ชมพู</option>
+            <option value="poster-comedy">Comedy — เหลืองทอง</option>
+            <option value="poster-horror">Horror — แดงดำ</option>
+            <option value="poster-action">Action — แดงอิฐ</option>
+            <option value="poster-adventure">Adventure — เขียว</option>
+            <option value="poster-animation">Animation — ส้มทอง</option>
+            <option value="poster-crime">Crime — เทาน้ำเงิน</option>
+            <option value="poster-fantasy">Fantasy — ม่วง</option>
+          </select>
+        </label>
+        <label class="am-field am-span-2"><span>แท็ก (คั่นด้วย , )</span><input name="tags" placeholder="horror, thriller, ดูกับเพื่อน"></label>
+        <label class="am-field am-span-2"><span>เรื่องย่อ</span><textarea name="synopsis" rows="4" maxlength="5000"></textarea></label>
+        <p id="movieFormError" class="am-error am-span-2" role="alert"></p>
+      </form>
+    </div>
+    <div class="am-modal-foot">
+      <button type="button" id="movieDeleteBtn" class="btn btn-ghost btn-sm am-danger-text">🗑 ลบหนังเรื่องนี้</button>
+      <div class="am-grow"></div>
+      <button type="button" class="btn btn-ghost btn-sm" data-close>ยกเลิก</button>
+      <button type="button" id="movieSaveBtn" class="btn btn-primary btn-sm">บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<datalist id="genreList">
+  <option value="Action"><option value="Adventure"><option value="Animation"><option value="Biography">
+  <option value="Comedy"><option value="Crime"><option value="Drama"><option value="Family">
+  <option value="Fantasy"><option value="History"><option value="Horror"><option value="Music">
+  <option value="Mystery"><option value="Romance"><option value="Sci-Fi"><option value="Thriller"><option value="Western">
+</datalist>
+
+<!-- ===================== ยืนยันการกระทำ ===================== -->
+<div id="confirmModal" class="am-modal hidden" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle">
+  <div class="am-modal-card am-modal-small">
+    <h2 id="confirmTitle">ยืนยัน</h2>
+    <p id="confirmText" class="am-sub"></p>
+    <div class="am-modal-foot">
+      <div class="am-grow"></div>
+      <button type="button" id="confirmNo" class="btn btn-ghost btn-sm">ยกเลิก</button>
+      <button type="button" id="confirmYes" class="btn btn-primary btn-sm am-danger-btn">ยืนยัน</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="posterFileInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+<div id="toasts" class="am-toasts" aria-live="polite"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

@@ -44,7 +44,8 @@ create table if not exists movies (
   synopsis text,
   tags text[] not null default '{}',
   poster_class text not null default 'poster-drama',
-  icon text not null default '🎬'
+  icon text not null default '🎬',
+  poster_url text  -- รูปโปสเตอร์จริง (admin อัปโหลดในหน้า /admin.html)
 );
 create index if not exists idx_movies_genre on movies(genre);
 create index if not exists idx_movies_score on movies(score desc);
@@ -88,6 +89,22 @@ create table if not exists movie_dismissals (
   primary key (user_id, movie_id)
 );
 
+-- ลิงก์รีเซ็ตรหัสผ่านทางอีเมล (เก็บเฉพาะ hash ของ token) — ใช้โดย password-reset.js
+create table if not exists password_resets (
+  id bigserial primary key,
+  user_id bigint not null references users(id) on delete cascade,
+  token_hash text not null unique,
+  expires_at timestamptz not null,
+  used_at timestamptz,
+  created_at timestamptz not null default now()
+);
+create index if not exists idx_password_resets_user on password_resets(user_id);
+
+-- Storage bucket เก็บไฟล์รูปโปสเตอร์ (public read, อัปโหลดผ่าน backend เท่านั้น)
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('posters', 'posters', true, 5242880, array['image/jpeg', 'image/png', 'image/webp', 'image/gif'])
+on conflict (id) do update set public = true;
+
 create index if not exists idx_movies_director on movies(director);
 create index if not exists idx_movies_star on movies(star);
 
@@ -103,23 +120,11 @@ alter table reviews enable row level security;
 alter table watchlist_items enable row level security;
 alter table movie_views enable row level security;
 alter table movie_dismissals enable row level security;
+alter table password_resets enable row level security;
 
 drop policy if exists "public read movies" on movies;
 create policy "public read movies" on movies for select using (true);
 
 drop policy if exists "public read reviews" on reviews;
 create policy "public read reviews" on reviews for select using (true);
--- users / sessions / watchlist_items: ไม่มี policy ให้ anon key เลย = เข้าไม่ได้เลยนอกจาก service_role
-
--- ============================================================================
--- ลืมรหัสผ่าน (ดู migration_password_reset.sql ถ้าฐานข้อมูลเดิมมีอยู่แล้ว ให้รันไฟล์นั้นแทน)
--- ============================================================================
-create table if not exists password_resets (
-  id bigserial primary key,
-  user_id bigint not null references users(id) on delete cascade,
-  token_hash text not null unique,
-  expires_at timestamptz not null,
-  used_at timestamptz,
-  created_at timestamptz not null default now()
-);
-alter table password_resets enable row level security;
+-- users / sessions / watchlist_items / password_resets: ไม่มี policy ให้ anon key เลย = เข้าไม่ได้เลยนอกจาก service_role

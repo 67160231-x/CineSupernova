@@ -641,3 +641,30 @@ mark{
 .filter-field select:hover,.filter-field select:focus{border-color:var(--coral-soft);outline:none;}
 .filter-field select option{background:var(--bg-card);color:var(--text-primary);}
 @media (max-width:560px){.filter-field{flex:1 1 140px;}.filter-field select{width:100%;min-width:0;}}
+
+/* ========== REAL POSTER IMAGES (อัปโหลดโดย admin) ==========
+   ถ้ามีรูป: ซ่อนไอคอน/แสงสะท้อน แล้วโชว์รูปแทน
+   ถ้ารูปโหลดไม่ขึ้น (.img-failed): ซ่อนรูป กลับไปโชว์สีตามแนว + ไอคอนเหมือนเดิม */
+.poster.has-img::before,.poster-lg.has-img::before{display:none;}
+.has-img .icon-lg{display:none;}
+.has-img.img-failed .icon-lg{display:inline;}
+.has-img.img-failed img{display:none;}
+.has-img .poster-img,.has-img .poster-backdrop{
+  position:absolute;inset:0;width:100%;height:100%;max-width:none;
+}
+/* การ์ดแนวนอน 16:10 — โปสเตอร์แนวตั้งวางกลาง ไม่ครอป พื้นหลังเป็นรูปเดียวกันแบบเบลอ */
+.ticket-card .poster.has-img{padding:0;}
+.ticket-card .poster.has-img:not(.img-failed){background:#120f1f;}
+.ticket-card .poster .poster-backdrop{
+  object-fit:cover;filter:blur(16px) brightness(.55) saturate(1.2);transform:scale(1.25);
+}
+.ticket-card .poster .poster-img{
+  object-fit:contain;z-index:1;padding:10px 0;
+  filter:drop-shadow(0 10px 18px rgba(0,0,0,.55));
+  transition:transform .3s var(--ease);
+}
+.ticket-card:hover .poster .poster-img{transform:scale(1.04);}
+/* หน้า detail (2:3) และ watchlist — เต็มกรอบ */
+.poster-lg.has-img .poster-img,.poster-sm.has-img .poster-img{object-fit:cover;}
+.poster-sm{position:relative;overflow:hidden;}
+.poster-sm .icon-lg{font-size:1.6rem;}

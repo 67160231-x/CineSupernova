@@ -10,34 +10,14 @@ const auth = require('./auth');
 const passwordReset = require('./password-reset');
 const recService = require('./recommendation-service');
 const { recordView, addDismissal } = require('./database');
+const { sendJSON, parseBody, clientIp, bearerToken } = require('./http-utils');
+const { handleAdminRoute } = require('./admin-routes');
+const { createLimiter } = require('./rate-limit');
+
+// กันการสุ่มเดา token รีเซ็ตรหัสผ่าน (การขอลิงก์รีเซ็ตมีตัวจำกัดของตัวเองใน password-reset.js แล้ว)
+const resetLimiter = createLimiter({ windowMs: 15 * 60 * 1000, max: 30 });
 
 const frontendDir = path.resolve(__dirname, '../Frontend/CineSupernova-main');
-
-function sendJSON(res, statusCode, payload) {
-  res.writeHead(statusCode, {
-    'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-  });
-  res.end(JSON.stringify(payload));
-}
-
-function parseBody(req) {
-  return new Promise((resolve, reject) => {
-    let data = '';
-    req.on('data', (chunk) => { data += chunk; });
-    req.on('end', () => {
-      if (!data) return resolve({});
-      try {
-        resolve(JSON.parse(data));
-      } catch (error) {
-        reject(new Error('Invalid JSON'));
-      }
-    });
-    req.on('error', reject);
-  });
-}
 
 function getContentType(filePath) {
   const ext = path.extname(filePath).toLowerCase();
@@ -50,6 +30,9 @@ function getContentType(filePath) {
     case '.png': return 'image/png';
     case '.jpg':
     case '.jpeg': return 'image/jpeg';
+    case '.webp': return 'image/webp';
+    case '.gif': return 'image/gif';
+    case '.ico': return 'image/x-icon';
     default: return 'application/octet-stream';
   }
 }
@@ -70,8 +53,7 @@ function serveStaticFile(res, filePath) {
 }
 
 async function requireAuth(req) {
-  const header = req.headers['authorization'] || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  const token = bearerToken(req);
   if (!token) {
     const err = new Error('ต้องแนบ Authorization: Bearer <token>');
     err.status = 401;
@@ -103,6 +85,16 @@ function createServer() {
       serveStaticFile(res, path.join(frontendDir, 'docs.html'));
       return;
     }
+    if (req.method === 'GET' && pathname === '/admin') {
+      serveStaticFile(res, path.join(frontendDir, 'admin.html'));
+      return;
+    }
+
+    // ADMIN ROUTES (/api/admin/...) — แยกไว้ใน admin-routes.js
+    if (pathname.startsWith('/api/admin')) {
+      await handleAdminRoute(req, res, reqUrl);
+      return;
+    }
 
     // AUTHENTICATION ROUTES
     if (req.method === 'POST' && pathname === '/api/register') {
@@ -130,8 +122,7 @@ function createServer() {
     // ลืมรหัสผ่าน: ขอลิงก์รีเซ็ต (ตอบข้อความเดียวกันเสมอ ไม่บอกว่ามีอีเมลนี้ในระบบหรือไม่)
     if (req.method === 'POST' && pathname === '/api/forgot-password') {
       try {
-        const clientIp = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
-        if (!passwordReset.allowIp(clientIp)) {
+        if (!passwordReset.allowIp(clientIp(req))) {
           sendJSON(res, 429, { error: 'ขอรีเซ็ตรหัสผ่านบ่อยเกินไป กรุณาลองใหม่ภายหลัง' });
           return;
         }
@@ -149,6 +140,10 @@ function createServer() {
     // ตรวจว่าลิงก์รีเซ็ตยังใช้ได้ไหม
     if (req.method === 'GET' && pathname === '/api/reset-password/check') {
       try {
+        if (!resetLimiter.hit(clientIp(req)).allowed) {
+          sendJSON(res, 429, { error: 'ลองบ่อยเกินไป กรุณารอสักครู่' });
+          return;
+        }
         const valid = await passwordReset.checkResetToken(reqUrl.searchParams.get('token'));
         sendJSON(res, 200, { valid });
       } catch (error) {
@@ -160,6 +155,10 @@ function createServer() {
     // ตั้งรหัสผ่านใหม่ด้วย token จากอีเมล
     if (req.method === 'POST' && pathname === '/api/reset-password') {
       try {
+        if (!resetLimiter.hit(clientIp(req)).allowed) {
+          sendJSON(res, 429, { error: 'ลองบ่อยเกินไป กรุณารอสักครู่' });
+          return;
+        }
         const body = await parseBody(req);
         const result = await passwordReset.resetPassword({ token: body.token, newPassword: body.newPassword });
         sendJSON(res, 200, result);
@@ -537,4 +536,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { createServer };
+module.exports = { createServer, _limiters: { resetLimiter } };

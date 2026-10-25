@@ -8,7 +8,29 @@ const recommender = require('./recommender');
 // ดึงเฉพาะคอลัมน์ที่ต้องใช้ (ไม่เอา synopsis/writer/budget ที่ยาวและไม่จำเป็น) ให้ query เบา
 // และเลี่ยงเพดาน 1,000 แถวต่อ request ของ Supabase ด้วยการดึงเป็นก้อนเล็กๆ ตามแนว/ผู้กำกับ/นักแสดง
 // แทนการโหลดหนังทั้ง 4,000 เรื่องมาคำนวณ
-const LIST_COLUMNS = 'id,title,mpaa_rating,genre,year,score,votes,director,star,runtime,tags,poster_class,icon';
+const BASE_COLUMNS = 'id,title,mpaa_rating,genre,year,score,votes,director,star,runtime,tags,poster_class,icon';
+// poster_url มาจาก migration_admin_reset.sql — ถ้ายังไม่ได้รัน migration ระบบแนะนำต้องไม่พัง
+// เลยถอยไปใช้คอลัมน์ชุดเดิมอัตโนมัติ (ดู withPosterFallback ด้านล่าง)
+let LIST_COLUMNS = `${BASE_COLUMNS},poster_url`;
+
+function isMissingPosterColumn(error) {
+  return Boolean(error) && /poster_url/.test(error.message || '');
+}
+
+function withPosterFallback(fn) {
+  return async (...args) => {
+    try {
+      return await fn(...args);
+    } catch (error) {
+      if (LIST_COLUMNS !== BASE_COLUMNS && isMissingPosterColumn(error)) {
+        console.warn('⚠️ ยังไม่มีคอลัมน์ movies.poster_url — รัน Backend/sql/migration_admin_reset.sql เพื่อเปิดใช้รูปโปสเตอร์');
+        LIST_COLUMNS = BASE_COLUMNS;
+        return fn(...args);
+      }
+      throw error;
+    }
+  };
+}
 
 function toApiMovie(row) {
   return mapMovieRow(row);
@@ -165,4 +187,8 @@ async function getSimilar(movieId, { limit = 4 } = {}) {
   return items.map((i) => ({ ...i.movie, reason: i.reason }));
 }
 
-module.exports = { getRecommendations, getTasteSummary, getSimilar };
+module.exports = {
+  getRecommendations: withPosterFallback(getRecommendations),
+  getTasteSummary: withPosterFallback(getTasteSummary),
+  getSimilar: withPosterFallback(getSimilar)
+};

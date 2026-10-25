@@ -1,5 +1,8 @@
 # 🆕 อัปเดตล่าสุด — สิ่งที่เพิ่ม/แก้ (ทำตามนี้ก่อน deploy)
 
+> 🛡️ **ระบบ Admin (อัปโหลดรูปหนัง / จัดการผู้ใช้ / รีวิว) + ส่งเมลผ่าน Gmail (Apps Script)** —
+> ดูขั้นตอนเต็มใน [`SETUP-ADMIN-EMAIL.md`](SETUP-ADMIN-EMAIL.md) (ไฟล์ `migration_admin_reset.sql` รวมตาราง `password_resets` ไว้แล้ว รันไฟล์นั้นไฟล์เดียวพอ)
+
 ## 1) รัน SQL ใน Supabase "ครั้งเดียว" (สำหรับปุ่มลืมรหัสผ่าน)
 เข้า Supabase > **SQL Editor** > New query แล้ววางเนื้อหาจาก `Backend/sql/migration_password_reset.sql` → Run
 (สร้างตาราง `password_resets` — รันซ้ำได้ปลอดภัย ไม่แตะข้อมูลเดิม) **ทำก่อน deploy โค้ดใหม่** ไม่งั้นกดลืมรหัสผ่านแล้วจะ error
@@ -8,10 +11,11 @@
 ## 2) ตั้งค่าส่งอีเมล (ใน Render > Environment และ `Backend/.env` ตอนรันในเครื่อง)
 | ตัวแปร | ความหมาย |
 |---|---|
+| `GMAIL_SCRIPT_URL` / `GMAIL_SCRIPT_SECRET` | **แนะนำ** ส่งจาก Gmail ของเราผ่าน Google Apps Script (ดู `SETUP-ADMIN-EMAIL.md`) — ถ้าตั้งไว้จะใช้ตัวนี้ก่อน Brevo |
 | `BREVO_API_KEY` | API key จาก Brevo (บัญชีฟรี) |
 | `MAIL_FROM_EMAIL` | อีเมลผู้ส่งที่ยืนยัน (Sender) ใน Brevo แล้ว |
 | `MAIL_FROM_NAME` | ชื่อผู้ส่ง (ไม่ใส่ = CineSupernova) |
-| `APP_BASE_URL` | ที่อยู่เว็บจริง เช่น `https://xxx.vercel.app` (ลิงก์ในอีเมลขึ้นต้นด้วยค่านี้) |
+| `APP_URL` หรือ `APP_BASE_URL` | ที่อยู่เว็บจริง เช่น `https://xxx.vercel.app` (ลิงก์ในอีเมลขึ้นต้นด้วยค่านี้ — ตั้งชื่อไหนก็ได้) |
 | `PASSWORD_RESET_DEMO` | `true` = โชว์ลิงก์รีเซ็ตบนหน้าเว็บเลย ใช้เดโม/ทดสอบเท่านั้น |
 
 - Brevo: สมัครฟรี → เมนู SMTP & API → สร้าง API key → เมนู Senders → เพิ่มและยืนยันอีเมลผู้ส่ง (ชื่อเมนูอาจต่างเล็กน้อยตามเวอร์ชัน)
@@ -93,6 +97,7 @@ curl "http://localhost:3000/api/movies?limit=3"
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `JWT_SECRET`
 - `JWT_EXPIRES_IN`
+- `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `APP_URL`, `GMAIL_SCRIPT_URL`, `GMAIL_SCRIPT_SECRET` (ดู `SETUP-ADMIN-EMAIL.md`)
 
 แล้ว redeploy — ข้อมูล users/reviews/watchlist จะไม่หายอีกต่อไปเวลา redeploy/restart แล้ว
 เพราะย้ายจาก SQLite (ephemeral) มาอยู่บน Supabase (persistent) ทั้งหมด

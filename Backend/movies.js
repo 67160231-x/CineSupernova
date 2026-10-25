@@ -30,7 +30,9 @@ function mapMovieRow(row) {
     synopsis: row.synopsis,
     tags: Array.isArray(row.tags) ? row.tags : [],
     posterClass: row.poster_class || 'poster-drama',
-    icon: row.icon || '🎬'
+    icon: row.icon || '🎬',
+    // รูปโปสเตอร์จริง (admin อัปโหลด/ตั้งลิงก์ได้) — ถ้า null หน้าเว็บจะใช้สีตามแนว + ไอคอนแทน
+    posterUrl: row.poster_url || null
   };
 }
 

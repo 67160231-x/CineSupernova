@@ -10,18 +10,33 @@ services:
       name: cinesupernova-data
       mountPath: /app/Backend/data   # ต้องตรงกับ path ที่ auth.js / database.js ใช้เก็บ .sqlite
       sizeGB: 1
+    # sync: false = ให้ไปกรอกค่าจริงเองใน Render Dashboard > Environment (ห้ามใส่ค่าลับในไฟล์นี้)
     envVars:
       - key: PORT
         value: 3000
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
       - key: JWT_SECRET
-        sync: false        # ไปตั้งค่าจริงเองใน Render Dashboard > Environment
-      - key: APP_BASE_URL
-        sync: false        # เช่น https://cinesupernova.vercel.app (ไม่ตั้งก็ได้ถ้าเปิดเว็บผ่านโดเมน Render โดยตรง)
+        sync: false
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: APP_URL
+        sync: false
+      - key: GMAIL_SCRIPT_URL
+        sync: false
+      - key: GMAIL_SCRIPT_SECRET
+        sync: false
       - key: BREVO_API_KEY
-        sync: false        # ระบบลืมรหัสผ่าน: ส่งอีเมลผ่าน Brevo
+        sync: false        # (ทางเลือก) ส่งอีเมลผ่าน Brevo แทน Apps Script
       - key: MAIL_FROM_EMAIL
-        sync: false        # อีเมลผู้ส่งที่ยืนยันใน Brevo แล้ว
+        sync: false        # อีเมลผู้ส่งที่ยืนยันใน Brevo แล้ว (ใช้คู่กับ BREVO_API_KEY)
       - key: MAIL_FROM_NAME
         value: CineSupernova
       - key: PASSWORD_RESET_DEMO
         value: "false"     # true = โชว์ลิงก์รีเซ็ตบนหน้าเว็บ (โหมดสาธิต) ห้ามเปิดบนเว็บจริง
+      - key: TMDB_API_KEY
+        sync: false

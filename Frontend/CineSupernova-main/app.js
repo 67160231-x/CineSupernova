@@ -7,11 +7,13 @@
   if (!currentPage) currentPage = 'index.html';
 
   const publicPages = ['login.html', 'reset-password.html'];
+  // มาจากปุ่ม "ไม่ใช่ฉัน" ในอีเมลแจ้งเปลี่ยนรหัส (login.html?forgot=1) — ต้องเปิดฟอร์มลืมรหัสผ่านได้แม้มี token ค้างอยู่
+  const wantsForgot = new URLSearchParams(window.location.search).has('forgot');
 
   if (!token && !publicPages.includes(currentPage)) {
     window.location.href = 'login.html';
   }
-  if (token && currentPage === 'login.html') {
+  if (token && currentPage === 'login.html' && !wantsForgot) {
     window.location.href = 'index.html';
   }
 })();
@@ -380,15 +382,41 @@ function genreArt(genre) {
   return found || { cls: 'poster-drama', icon: '🎬' };
 }
 
+// ---------------------------------------------------------------------------
+// รูปโปสเตอร์ (admin อัปโหลดใน /admin.html) — ถ้าไม่มีรูปหรือโหลดรูปไม่ขึ้น จะกลับไปใช้สีตามแนว + ไอคอนเหมือนเดิม
+// ---------------------------------------------------------------------------
+function safeImageUrl(url) {
+  if (!url) return '';
+  try {
+    const u = new URL(url, window.location.href);
+    return (u.protocol === 'https:' || u.protocol === 'http:') ? u.href : '';
+  } catch (e) {
+    return '';
+  }
+}
+
+const POSTER_FALLBACK = "var p=this.closest('.has-img');if(p)p.classList.add('img-failed');";
+
+// withBackdrop = ใส่ภาพเบลอเป็นพื้นหลัง (ใช้กับการ์ดแนวนอน ให้โปสเตอร์แนวตั้งแสดงครบไม่โดนครอป)
+function posterImgHTML(url, alt, { withBackdrop = false } = {}) {
+  const src = safeImageUrl(url);
+  if (!src) return '';
+  const s = escapeHTML(src);
+  const backdrop = withBackdrop ? `<img class="poster-backdrop" src="${s}" alt="" aria-hidden="true" loading="lazy" decoding="async">` : '';
+  return `${backdrop}<img class="poster-img" src="${s}" alt="โปสเตอร์ ${escapeHTML(alt)}" loading="lazy" decoding="async" onerror="${POSTER_FALLBACK}">`;
+}
+
 function movieCardHTML(m) {
   // ใช้ posterClass/icon ที่มากับข้อมูลจาก API ก่อน ถ้าไม่มีค่อย fallback ไปเดาจาก genre
   const art = (m.posterClass && m.icon) ? { cls: m.posterClass, icon: m.icon } : genreArt(m.genre || '');
   const tagsList = m.tags || [];
   // แก้บั๊ก: เดิมใช้ m.rating (เรต MPAA เช่น "R","PG-13") มาโชว์เป็นดาว ทั้งที่คะแนนจริงคือ m.score
   const scoreText = (m.score === null || m.score === undefined) ? '–' : Number(m.score).toFixed(1);
+  const img = posterImgHTML(m.posterUrl, m.title, { withBackdrop: true });
   return `
     <a class="ticket-card" href="detail.html?id=${encodeURIComponent(m.id)}">
-      <div class="poster ${art.cls}">
+      <div class="poster ${escapeHTML(art.cls)}${img ? ' has-img' : ''}">
+        ${img}
         <span class="score-badge">★ ${scoreText}</span>
         <span class="icon-lg">${art.icon}</span>
       </div>
@@ -804,15 +832,18 @@ async function initWatchlistPage() {
   if (!container) return;
   try {
     const watchlist = await fetchJson('/api/watchlist');
-    container.innerHTML = watchlist.map((movie) => `
+    container.innerHTML = watchlist.map((movie) => {
+      const img = posterImgHTML(movie.posterUrl, movie.title);
+      return `
       <div class="watch-row">
-        <div class="poster-sm ${movie.posterClass || 'poster-drama'}" style="display:flex;align-items:center;justify-content:center;font-size:1.6rem;">${movie.icon || '🎬'}</div>
+        <a href="detail.html?id=${encodeURIComponent(movie.id)}" class="poster-sm ${escapeHTML(movie.posterClass || 'poster-drama')}${img ? ' has-img' : ''}" style="display:flex;align-items:center;justify-content:center;font-size:1.6rem;">${img}<span class="icon-lg">${movie.icon || '🎬'}</span></a>
         <div class="grow">
-          <h4>${movie.title}</h4>
-          <div class="meta">${movie.genre} · ${movie.year}</div>
+          <h4>${escapeHTML(movie.title)}</h4>
+          <div class="meta">${escapeHTML(movie.genre)} · ${escapeHTML(movie.year)}</div>
         </div>
-        <button class="btn btn-ghost btn-sm story-btn" data-title="${movie.title}" data-tag="${(movie.tags && movie.tags[0]) || 'หนังดี'}">📸 Generate Story Card</button>
-      </div>`).join('');
+        <button class="btn btn-ghost btn-sm story-btn" data-title="${escapeHTML(movie.title)}" data-tag="${escapeHTML((movie.tags && movie.tags[0]) || 'หนังดี')}">📸 Generate Story Card</button>
+      </div>`;
+    }).join('');
   } catch (error) {
     console.error(error);
   }
@@ -874,8 +905,9 @@ async function initDetailPage() {
   try {
     const movie = await fetchJson(`/api/movies/${movieIdParam}`);
     if (poster) {
-      poster.className = `poster-lg ${movie.posterClass || 'poster-drama'}`;
-      poster.innerHTML = `<span class="icon-lg" style="font-size:4.5rem;">${movie.icon || '🎬'}</span>`;
+      const img = posterImgHTML(movie.posterUrl, movie.title);
+      poster.className = `poster-lg ${movie.posterClass || 'poster-drama'}${img ? ' has-img' : ''}`;
+      poster.innerHTML = `${img}<span class="icon-lg" style="font-size:4.5rem;">${movie.icon || '🎬'}</span>`;
     }
     if (eyebrow) eyebrow.textContent = `${movie.icon || '🎬'} ${movie.genre} · ${movie.year}`;
     if (title) title.textContent = movie.title;
@@ -895,7 +927,7 @@ async function initDetailPage() {
       ratingCells[3].textContent = formatVotes(movie.votes);
     }
     if (tags && movie.tags) {
-      tags.innerHTML = movie.tags.map((tag) => `<span class="sticker">${tag}</span>`).join('');
+      tags.innerHTML = movie.tags.map((tag) => `<span class="sticker">${escapeHTML(tag)}</span>`).join('');
     }
     if (writeBtn) {
       writeBtn.addEventListener('click', () => {
@@ -922,7 +954,7 @@ async function initDetailPage() {
         <div class="section-head"><h2>รีวิวจากนักวิจารณ์</h2></div>
         ${movieReviews.length ? movieReviews.map((review) => `
           <div class="review-block">
-            <div class="author">🧑‍🚀 ${escapeHTML(review.author)} · ${new Date(review.createdAt).toLocaleDateString('th-TH')} · 🍿${review.rating}</div>
+            <div class="author">🧑‍🚀 ${escapeHTML(review.author)} · ${new Date(review.createdAt).toLocaleDateString('th-TH')} · 🍿${escapeHTML(review.rating)}</div>
             ${review.spoiler ? '' : `<p>${escapeHTML(review.text)}</p>`}
             ${review.spoiler ? `
               <div class="spoiler-wrap">
@@ -1125,6 +1157,25 @@ function initForgotPassword() {
   });
 }
 
+// ปุ่ม "ส่งลิงก์ตั้งรหัสใหม่ไปที่อีเมลของฉัน" ในหน้าโปรไฟล์ (กรณีจำรหัสเดิมไม่ได้)
+function initSendResetToMe() {
+  const btn = document.getElementById('sendResetToMeBtn');
+  const msgEl = document.getElementById('sendResetToMeMsg');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    try {
+      const me = await fetchJson('/api/me');
+      const res = await fetchJson('/api/forgot-password', { method: 'POST', body: JSON.stringify({ email: me.email }) });
+      if (msgEl) { msgEl.style.color = '#7ee8c0'; msgEl.textContent = `${res.message} (${me.email})`; }
+    } catch (err) {
+      if (msgEl) { msgEl.style.color = '#ff7a59'; msgEl.textContent = err.message || 'ส่งลิงก์ไม่สำเร็จ'; }
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
 // ---------- หน้าตั้งรหัสผ่านใหม่ (reset-password.html — เปิดจากลิงก์ในอีเมล) ----------
 function initResetPassword() {
   const form = document.getElementById('resetForm');
@@ -1187,6 +1238,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initAuthNavbar();
   initAuthModal();
   initChangePasswordForm();
+  initSendResetToMe();
+  // มาจากลิงก์ "ไม่ใช่ฉัน" ในอีเมลแจ้งเปลี่ยนรหัส -> เปิดฟอร์มลืมรหัสผ่านให้เลย
+  if (new URLSearchParams(window.location.search).has('forgot') && document.getElementById('forgotLink')) {
+    removeToken();
+    document.getElementById('forgotLink').click();
+  }
 
   attachUsernameChecker('regUsername', 'modalUsernameStatus');
   attachUsernameChecker('pageRegUsername', 'pageUsernameStatus');
