@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
-    "test:offline": "node --test tests/recommender.test.js tests/recommendations.api.test.js tests/password-reset.test.js tests/search-filters.test.js tests/admin-reset.api.test.js tests/mailer.test.js"
+    "test:offline": "node --test tests/recommender.test.js tests/recommendations.api.test.js tests/password-reset.test.js tests/search-filters.test.js tests/admin-reset.api.test.js tests/mailer.test.js tests/trending.api.test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",

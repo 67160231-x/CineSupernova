@@ -666,3 +666,72 @@ mark{
 .poster-lg.has-img .poster-img,.poster-sm.has-img .poster-img{object-fit:cover;}
 .poster-sm{position:relative;overflow:hidden;}
 .poster-sm .icon-lg{font-size:1.6rem;}
+
+/* ========== หน้าแรก: หนังกำลังมาแรง 10 อันดับ (เลื่อนได้) ========== */
+.trend-showcase{max-width:330px;margin-left:auto;}
+.trend-frame{
+  border-radius:var(--radius-l);overflow:hidden;
+  background:var(--bg-card);border:1px solid var(--border-soft);
+  box-shadow:0 30px 60px -25px rgba(0,0,0,.55);
+  transform:rotate(-2deg);
+}
+.trend-track{
+  display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  scrollbar-width:none;overscroll-behavior-x:contain;
+}
+.trend-track::-webkit-scrollbar{display:none;}
+.trend-track:focus-visible{outline:3px solid var(--butter);outline-offset:-3px;}
+.trend-slide{flex:0 0 100%;scroll-snap-align:center;display:block;color:inherit;}
+.trend-poster{
+  position:relative;overflow:hidden;aspect-ratio:2/3;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(155deg,#332a56,#4a2f45 75%);
+}
+.trend-poster .icon-lg{font-size:4.2rem;position:relative;z-index:1;filter:drop-shadow(0 10px 18px rgba(0,0,0,.4));}
+.trend-poster .poster-img{object-fit:cover;transition:transform .4s var(--ease);}
+.trend-slide:hover .trend-poster .poster-img{transform:scale(1.03);}
+.trend-poster::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:35%;z-index:1;
+  background:linear-gradient(transparent,rgba(16,13,30,.55));pointer-events:none;
+}
+.trend-rank{
+  position:absolute;top:14px;left:14px;z-index:2;
+  font-family:var(--font-display);font-weight:800;font-size:1rem;line-height:1;
+  padding:8px 12px;border-radius:999px;
+  background:rgba(28,23,48,.82);color:var(--butter);border:1px solid rgba(255,200,87,.35);
+  backdrop-filter:blur(6px);
+}
+.trend-score{
+  position:absolute;bottom:14px;right:14px;z-index:2;
+  background:var(--butter);color:#1c1730;
+  font-family:var(--font-display);font-weight:700;font-size:.82rem;
+  padding:5px 11px;border-radius:999px;
+}
+.trend-slide .showcase-info h3{
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;
+}
+.trend-reason{margin-top:4px;font-size:.76rem;font-weight:600;color:var(--mint);}
+.trend-reason:empty{display:none;}
+.trend-loading .showcase-info h3{color:var(--text-dim);}
+
+.trend-controls{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:22px;}
+.trend-controls[hidden]{display:none;}
+.trend-nav{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;cursor:pointer;
+  background:var(--bg-card);border:1px solid var(--border-soft);color:var(--text-primary);
+  font-size:1.3rem;line-height:1;display:flex;align-items:center;justify-content:center;
+  transition:border-color .2s var(--ease),color .2s var(--ease);
+}
+.trend-nav:hover{border-color:var(--coral-soft);color:var(--coral-soft);}
+.trend-dots{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;}
+.trend-dot{
+  width:8px;height:8px;border-radius:999px;padding:0;border:none;cursor:pointer;
+  background:var(--border-soft);transition:width .25s var(--ease),background .25s var(--ease);
+}
+.trend-dot.active{width:22px;background:linear-gradient(90deg,var(--coral),var(--butter));}
+@media (max-width:860px){
+  .trend-showcase{margin:0 auto;max-width:300px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .trend-track{scroll-behavior:auto;}
+}

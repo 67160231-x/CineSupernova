@@ -9,6 +9,7 @@ const movieService = require('./movies');
 const auth = require('./auth');
 const passwordReset = require('./password-reset');
 const recService = require('./recommendation-service');
+const trending = require('./trending');
 const { recordView, addDismissal } = require('./database');
 const { sendJSON, parseBody, clientIp, bearerToken } = require('./http-utils');
 const { handleAdminRoute } = require('./admin-routes');
@@ -325,6 +326,17 @@ function createServer() {
         sendJSON(res, 201, { message: 'รับทราบ จะไม่แนะนำเรื่องนี้อีก' });
       } catch (error) {
         sendJSON(res, error.status || 500, { error: error.message || 'เกิดข้อผิดพลาด' });
+      }
+      return;
+    }
+
+    // หนังกำลังมาแรง 10 อันดับ (หน้าแรก) — ไม่ต้องล็อกอิน / ต้องอยู่ก่อน route /api/movies/:id
+    if (req.method === 'GET' && pathname === '/api/movies/trending') {
+      try {
+        const items = await trending.getTrending({ limit: reqUrl.searchParams.get('limit') || 10 });
+        sendJSON(res, 200, items);
+      } catch (error) {
+        sendJSON(res, error.status || 500, { error: error.message || 'Database error' });
       }
       return;
     }

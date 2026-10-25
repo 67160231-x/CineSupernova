@@ -33,19 +33,23 @@
         <h1>วันนี้อารมณ์ไหน<br>เราหาหนังที่ใช่ให้</h1>
         <p class="lede">แตะอารมณ์วันนี้ของคุณ แล้วปล่อยให้เราจับคู่หนังที่เข้ากับความรู้สึกตอนนี้ ไม่ใช่แค่แนวหนังที่เคยดู</p>
       </div>
-      <div class="hero-showcase">
-        <div class="showcase-ticket">
-          <div class="showcase-poster poster-scifi">
-            <span class="icon-lg">🛸</span>
-          </div>
-          <div class="ticket-perf"></div>
-          <div class="showcase-info">
-            <h3>สัญญาณจากดาวที่ไม่มีใครเห็น</h3>
-            <div class="meta">SCI-FI · ดราม่า · 2026</div>
+      <!-- หนังกำลังมาแรง 10 อันดับ (ดึงจาก /api/movies/trending — เลื่อนดูได้) -->
+      <div class="hero-showcase trend-showcase" id="trendShowcase" aria-roledescription="carousel" aria-label="หนังกำลังมาแรง 10 อันดับ">
+        <div class="trend-frame">
+          <div class="trend-track" id="trendTrack" tabindex="0" aria-live="polite">
+            <div class="trend-slide trend-loading">
+              <div class="trend-poster poster-drama"><span class="icon-lg">🍿</span></div>
+              <div class="ticket-perf"></div>
+              <div class="showcase-info"><h3>กำลังโหลดหนังมาแรง...</h3><div class="meta">&nbsp;</div></div>
+            </div>
           </div>
         </div>
         <div class="float-badge badge-top">🔥 กำลังมาแรง</div>
-        <div class="float-badge badge-bottom">⭐ 4.8 คะแนนเฉลี่ย</div>
+        <div class="trend-controls" id="trendControls" hidden>
+          <button type="button" class="trend-nav" id="trendPrev" aria-label="เรื่องก่อนหน้า">‹</button>
+          <div class="trend-dots" id="trendDots" role="tablist" aria-label="เลือกอันดับ"></div>
+          <button type="button" class="trend-nav" id="trendNext" aria-label="เรื่องถัดไป">›</button>
+        </div>
       </div>
     </section>
 

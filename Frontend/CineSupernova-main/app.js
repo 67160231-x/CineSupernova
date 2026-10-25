@@ -562,6 +562,94 @@ async function initSimilarMovies(movieId) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// หน้าแรก: หนังกำลังมาแรง 10 อันดับ (เลื่อนได้ด้วยนิ้ว / ปุ่มลูกศร / จุด และเลื่อนเองทุก 5 วินาที)
+// ---------------------------------------------------------------------------
+function trendSlideHTML(m) {
+  const art = (m.posterClass && m.icon) ? { cls: m.posterClass, icon: m.icon } : genreArt(m.genre || '');
+  const img = posterImgHTML(m.posterUrl, m.title);
+  const score = (m.score === null || m.score === undefined) ? '' : `<span class="trend-score">★ ${Number(m.score).toFixed(1)}</span>`;
+  return `
+    <a class="trend-slide" href="detail.html?id=${encodeURIComponent(m.id)}" aria-label="อันดับ ${Number(m.rank)}: ${escapeHTML(m.title)}">
+      <div class="trend-poster ${escapeHTML(art.cls)}${img ? ' has-img' : ''}">
+        ${img}
+        <span class="trend-rank">#${Number(m.rank)}</span>
+        ${score}
+        <span class="icon-lg">${art.icon}</span>
+      </div>
+      <div class="ticket-perf"></div>
+      <div class="showcase-info">
+        <h3 title="${escapeHTML(m.title)}">${escapeHTML(m.title)}</h3>
+        <div class="meta">${escapeHTML(m.genre || '')}${m.year ? ` · ${escapeHTML(m.year)}` : ''}</div>
+        <div class="trend-reason">${escapeHTML(m.reason && m.reason !== 'คะแนนสูง' ? `🔥 ${m.reason}` : '')}</div>
+      </div>
+    </a>`;
+}
+
+async function initTrending() {
+  const track = document.getElementById('trendTrack');
+  if (!track) return;
+  const showcase = document.getElementById('trendShowcase');
+  const controls = document.getElementById('trendControls');
+  const dotsEl = document.getElementById('trendDots');
+  const prevBtn = document.getElementById('trendPrev');
+  const nextBtn = document.getElementById('trendNext');
+
+  let items = [];
+  try {
+    items = await fetchJson('/api/movies/trending?limit=10');
+  } catch (error) {
+    console.error(error);
+  }
+  if (!Array.isArray(items) || !items.length) {
+    const h3 = track.querySelector('h3');
+    if (h3) h3.textContent = 'โหลดหนังมาแรงไม่สำเร็จ ลองรีเฟรชอีกครั้ง';
+    return;
+  }
+
+  track.innerHTML = items.map(trendSlideHTML).join('');
+  dotsEl.innerHTML = items.map((m, i) => `<button type="button" class="trend-dot${i === 0 ? ' active' : ''}" role="tab" aria-label="อันดับ ${i + 1}" data-i="${i}"></button>`).join('');
+  controls.hidden = items.length < 2;
+
+  const count = items.length;
+  const current = () => Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+  const goTo = (i) => track.scrollTo({ left: ((i + count) % count) * track.clientWidth });
+
+  let raf = null;
+  track.addEventListener('scroll', () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const idx = current();
+      dotsEl.querySelectorAll('.trend-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    });
+  });
+  prevBtn.addEventListener('click', () => { goTo(current() - 1); restart(); });
+  nextBtn.addEventListener('click', () => { goTo(current() + 1); restart(); });
+  dotsEl.addEventListener('click', (e) => {
+    const dot = e.target.closest('.trend-dot');
+    if (dot) { goTo(Number(dot.dataset.i)); restart(); }
+  });
+  track.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); goTo(current() + 1); restart(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goTo(current() - 1); restart(); }
+  });
+
+  // เลื่อนเองทุก 5 วินาที — หยุดตอนเอาเมาส์ชี้/แตะ/โฟกัส และปิดถ้าผู้ใช้ตั้งค่าลดการเคลื่อนไหว
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let timer = null;
+  let paused = false;
+  function start() {
+    if (reduceMotion || count < 2) return;
+    clearInterval(timer);
+    timer = setInterval(() => { if (!paused && !document.hidden) goTo(current() + 1); }, 5000);
+  }
+  function restart() { start(); }
+  ['mouseenter', 'focusin', 'touchstart'].forEach((ev) => showcase.addEventListener(ev, () => { paused = true; }, { passive: true }));
+  ['mouseleave', 'focusout'].forEach((ev) => showcase.addEventListener(ev, () => { paused = false; }));
+  showcase.addEventListener('touchend', () => { setTimeout(() => { paused = false; }, 4000); }, { passive: true });
+  start();
+}
+
 async function getMovies() {
   if (MOVIES.length) return MOVIES;
   try {
@@ -1248,6 +1336,7 @@ document.addEventListener('DOMContentLoaded', () => {
   attachUsernameChecker('regUsername', 'modalUsernameStatus');
   attachUsernameChecker('pageRegUsername', 'pageUsernameStatus');
 
+  initTrending();
   initMoodPicker();
   initRecommendations();
   initTasteProfile();
